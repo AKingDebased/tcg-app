@@ -74,7 +74,7 @@ $(function(){
 
   $(".builder-view").click(function(){
     //repeatedly adds pool to builder
-    $(".draft-pool").append(cardPoolToTable(currentPool));
+    $(".draft-pool").html(cardPoolToTable(currentPool));
   });
 
   $(".log-fetched").click(function(){
