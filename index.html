@@ -4,18 +4,18 @@
   <meta charset="utf-8">
   <title></title>
   <link rel="stylesheet" href="css/cosmo-bootstrap.css">
-  <link rel="stylesheet" href="css/animate.css">
   <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/animate.css">
 </head>
 <body>
 
   <div class="panel panel-default pool-builder">
     <div class="panel-body">
       <h3>card pool</h3>
-      <textarea name="" id="" cols="30" rows="16"></textarea>\
+      <textarea name="" id="" cols="30" rows="16"></textarea>
       <button class="btn btn-success add-to-pool center-block">add to pool</button>
-      <button class="btn btn-warning builder-view">builder view</button>
-      <button class="btn btn-danger pool-view">deck view</button>
+      <button class="btn btn-warning builder-view" type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">open deck builder</button>
+      <button class="btn btn-danger log-fetched">log fetched cards</button>
     </div>
   </div>
 
@@ -24,8 +24,32 @@
     <div class="btn btn-primary">add card</div>
   </div>
 
+  <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" id="myModalLabel">deck builder</h4>
+        </div>
+        <div class="modal-body">
+          <div class="draft-pool">
+            <h4>draft pool</h4>
+          </div>
+          <div class="my-deck">
+            <h4>my deck</h4>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary">Save changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <script type="template" class="pool-builder"></script>
-  <script src="js/jquery-min.js"></script>
-  <script src="js/scripts.js"></script>
+  <script src="scripts/jquery-min.js"></script>
+  <script src="scripts/bootstrap.min.js"></script>
+  <script src="scripts/scripts.js"></script>
 </body>
 </html>
