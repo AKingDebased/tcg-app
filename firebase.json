@@ -1,0 +1,9 @@
+{
+  "firebase": "tcg-app",
+  "public": ".",
+  "ignore": [
+    "firebase.json",
+    "**/.*",
+    "**/node_modules/**"
+  ]
+}
