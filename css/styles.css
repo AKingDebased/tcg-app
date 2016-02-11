@@ -15,12 +15,57 @@ body{
   height:160px;
 }
 
+.draft-col{
+  width:150px;
+  display:inline-block;
+  margin: 5px;
+}
+
+
+.white-col{
+  border: 3px solid darkgrey;
+}
+
+.blue-col{
+  background-color:#66ccff;
+  border: 3px solid #0099e6;
+}
+
+.black-col{
+  background-color:#bfbfbf;
+  border: 3px solid black;
+}
+
+.red-col{
+  background-color:#ff6666;
+  border: 3px solid #cc0000;
+}
+
+.green-col{
+  background-color:#99e699;
+  border: 3px solid #248f24;
+}
+
+.multi-col{
+  background-color:#ffff99;
+  border: 3px solid #ffd966;
+}
+
+.colorless-col{
+  background-color:#e0e0d1;
+  border: 3px solid #8a8a5c;
+}
+
 .my-hand{
   bottom:0px;
 }
 
 .opponent-hand{
   top:0px;
+}
+
+.pool-builder-modal{
+  width:1200px;
 }
 
 .pool-builder{

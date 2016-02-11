@@ -4,53 +4,22 @@ $(function(){
   var currentPool;
   var fetchedCards = [];
 
-  var splitCardSelection = function(selectionsStr){
-    //extract card amount and name from string
-    var cardSelections = selectionsStr.split("\n");
-
-    return cardSelections.map(function(cardSelection){
-      var splitSelection = cardSelection.split(" ");
-      var amount = isNaN(parseInt(cardSelections[0])) === true ? NaN : parseInt(splitSelection.splice(0,1));
-
-      return {"amount": amount,"name": splitSelection.join(" ")}
-    });
-  }
-
   var formatForAJAX = function(card){
     //commas need to be handled
-    if(card.name.includes("'")){
+    if(card.includes("'")){
       //deckbrew replaces apostrophes with empty string
-      return card.name.replace(/'/g, '').toLowerCase().split(" ").join("-"); //HOW DOES REGEX WORK SEND HELP
+      return card.replace(/'/g, '').toLowerCase().split(" ").join("-"); //HOW DOES REGEX WORK SEND HELP
     }
-    return card.name.toLowerCase().split(" ").join("-");
+    return card.toLowerCase().split(" ").join("-");
   }
 
-  var cardPoolToTable = function(cardPool){
-    //highly inefficient, but by god it works
-    var $cardTable = $("<table>").addClass("table");
-    var tableData = [];
-    var $tableRow;
-    var sortedCardNames = sortCardNamesABC(currentPool);
-    //sorts in rows, not columns
-
-    sortedCardNames.forEach(function(cardName,index){
-      //not displaying property when there are only two cards
-      if(index % 3 === 0){
-        $tableRow = $("<tr>");
-        if(index !== 0){
-          $cardTable.append($tableRow);
-        }
-        if(index !== sortedCardNames.length - 1){
-          $tableRow = null;
-        }
-      }
-      $tableRow.append($("<td>").text(cardName));
-    });
-    return $cardTable;
-  }
+  var sortByColor = function(cardPool){
 
 
-  var sortCardNamesABC = function(cards){
+
+  };
+
+  var sortABC = function(cards){
     //expects array of card objects, returns new array of sorted string names
     var cardNames = [];
 
@@ -72,7 +41,7 @@ $(function(){
   }
 
   $(".add-to-pool").click(function(){
-    currentPool = splitCardSelection($(".pool-builder textarea").val());
+    currentPool = $(".pool-builder textarea").val().split("\n");
     $(".pool-builder textarea").val("");
 
     currentPool.forEach(function(currentCard){
@@ -81,8 +50,7 @@ $(function(){
         fetchedCards.push(fetchedCard);
       });
     });
-
-    $(".draft-pool").html(cardPoolToTable(currentPool));
+    //$(".draft-pool").html(cardPoolToTable(currentPool));
   });
 
   $(".pool-view").click(function(){

@@ -26,7 +26,7 @@
   </div>
 
   <div data-toggle="tab" class="modal fade myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog pool-builder-modal" role="document">
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -39,22 +39,31 @@
           <div class="tab-content">
             <div role="tabpanel" class="tab-pane draft-pool-container">
               <div class="draft-pool">
+                <div class="draft-col white-col"><li>test</li></div>
+                <div class="draft-col blue-col"><li>test</li></div>
+                <div class="draft-col black-col"><li>test</li></div>
+                <div class="draft-col red-col"><li>test</li></div>
+                <div class="draft-col green-col"><li>test</li></div>
+                <div class="draft-col multi-col"><li>test</li></div>
+                <div class="draft-col colorless-col"><li>test</li></div>
               </div>
             </div>
+
             <div role="tabpanel" class="tab-pane deck-builder-container">
               test
             </div>
           </div>
         </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
       </div>
     </div>
   </div>
+</div>
 
-  <script src="scripts/jquery-min.js"></script>
-  <script src="scripts/bootstrap.min.js"></script>
-  <script src="scripts/scripts.js"></script>
+<script src="scripts/jquery-min.js"></script>
+<script src="scripts/bootstrap.min.js"></script>
+<script src="scripts/scripts.js"></script>
 </body>
 </html>
