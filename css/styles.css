@@ -16,11 +16,17 @@ body{
 }
 
 .draft-col{
-  width:150px;
+  width:180px;
   display:inline-block;
   margin: 5px;
+  padding:5px;
 }
 
+.draft-col ul{
+  list-style-type:none;
+  padding:0px;
+  margin:3px 0px;
+}
 
 .white-col{
   border: 3px solid darkgrey;
@@ -65,7 +71,7 @@ body{
 }
 
 .pool-builder-modal{
-  width:1200px;
+  width:1400px;
 }
 
 .pool-builder{

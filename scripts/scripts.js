@@ -13,23 +13,47 @@ $(function(){
     return card.toLowerCase().split(" ").join("-");
   }
 
+  var createNameList = function(cards){
+    var $el = $("<ul>");
+
+    _.each(cards,function(card){
+      $el.append($("<li>").append(card.name));
+    });
+
+    return $el;
+  }
+
+  var populateColorCols = function(sortedCards){
+    //currently unalphabetized
+    $(".white-col").html(createNameList(sortedCards.white));
+    $(".blue-col").html(createNameList(sortedCards.blue));
+    $(".black-col").html(createNameList(sortedCards.black));
+    $(".red-col").html(createNameList(sortedCards.red));
+    $(".green-col").html(createNameList(sortedCards.green));
+    $(".multi-col").html(createNameList(sortedCards.multicolor));
+    $(".colorless-col").html(createNameList(sortedCards.colorless));
+  }
+
   var sortByColor = function(cardPool){
     //returns an object containing arrays of all the sorted cards
-    var sortedCards = {};
-
-    cardPool.filter(function(card){
-      if(card.colors.length > 1){
-        sortedCards.multicolor
+    return _.groupBy(cardPool, function(card) {
+      if (!card.hasOwnProperty("colors")) {
+        return "colorless";
       }
-
+      if (card.colors.length > 1) {
+        return "multicolor";
+      } else {
+        return card.colors[0];
+      }
     });
+    //underscore, you beautiful bastard
   };
 
   var sortABC = function(cards){
     //expects array of card objects, returns new array of sorted string names
     var cardNames = [];
 
-    cards.forEach(function(card){
+    _.each(cards,function(card){
       cardNames.push(card.name);
     })
     cardNames.sort();
@@ -50,13 +74,13 @@ $(function(){
     currentPool = $(".pool-builder textarea").val().split("\n");
     $(".pool-builder textarea").val("");
 
-    currentPool.forEach(function(currentCard){
+    _.each(currentPool,function(currentCard){
       //asynchronicity needs to be handled. maybe use a promise?
       $.get("https://api.deckbrew.com/mtg/cards/" + formatForAJAX(currentCard),function(fetchedCard){
         fetchedCards.push(fetchedCard);
       });
     });
-    //$(".draft-pool").html(cardPoolToTable(currentPool));
+    //need a promise here to load sorted cards to DOM
   });
 
   $(".pool-view").click(function(){
@@ -68,8 +92,8 @@ $(function(){
   });
 
   $(".log-fetched").click(function(){
-    console.log(fetchedCards);
     console.log("sorted", sortByColor(fetchedCards));
+    populateColorCols(sortByColor(fetchedCards));
   });
 
   $(".draft-pool-tab").click(function(){

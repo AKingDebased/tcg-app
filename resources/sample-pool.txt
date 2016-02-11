@@ -63,6 +63,9 @@ Oblivion Ring
 Story Circle
 Faith's Fetters
 Nyx-Fleece Ram
+
+blue
+
 Cloudfin Raptor
 Enclave Cryptologist
 Phantasmal Bear
@@ -323,7 +326,10 @@ Curse of Predation
 Moldervine Cloak
 Leafcrown Dryad
 Treetop Village
-Arctic Aven
+
+multicolor
+
+Arctic Aven (technically blue)
 Reflector Mage
 Thunderclap Wyvern
 Psychatog
