@@ -14,9 +14,15 @@ $(function(){
   }
 
   var sortByColor = function(cardPool){
+    //returns an object containing arrays of all the sorted cards
+    var sortedCards = {};
 
+    cardPool.filter(function(card){
+      if(card.colors.length > 1){
+        sortedCards.multicolor
+      }
 
-
+    });
   };
 
   var sortABC = function(cards){
@@ -63,6 +69,7 @@ $(function(){
 
   $(".log-fetched").click(function(){
     console.log(fetchedCards);
+    console.log("sorted", sortByColor(fetchedCards));
   });
 
   $(".draft-pool-tab").click(function(){
