@@ -34,20 +34,21 @@ $(function(){
     //sorts in rows, not columns
 
     sortedCardNames.forEach(function(cardName,index){
-      tableData.push($("<td>").text(cardName));
-
-      if((index + 1) % 3 === 0){
+      //not displaying property when there are only two cards
+      if(index % 3 === 0){
         $tableRow = $("<tr>");
-
-        tableData.forEach(function(cardTD){
-          $tableRow.append(cardTD).appendTo($cardTable);
-        });
-
-        tableData = [];
+        if(index !== 0){
+          $cardTable.append($tableRow);
+        }
+        if(index !== sortedCardNames.length - 1){
+          $tableRow = null;
+        }
       }
+      $tableRow.append($("<td>").text(cardName));
     });
     return $cardTable;
   }
+
 
   var sortCardNamesABC = function(cards){
     //expects array of card objects, returns new array of sorted string names
@@ -60,6 +61,16 @@ $(function(){
     return cardNames;
   }
 
+  var setActiveTab = function($tab,$pane,state){
+    if(state === "active"){
+      $tab.addClass(state);
+      $pane.addClass(state);
+    } else {
+      $tab.removeClass("active");
+      $pane.removeClass("active");
+    }
+  }
+
   $(".add-to-pool").click(function(){
     currentPool = splitCardSelection($(".pool-builder textarea").val());
     $(".pool-builder textarea").val("");
@@ -70,14 +81,32 @@ $(function(){
         fetchedCards.push(fetchedCard);
       });
     });
+
+    $(".draft-pool").html(cardPoolToTable(currentPool));
+  });
+
+  $(".pool-view").click(function(){
+    setActiveTab($(".draft-pool-tab"),$(".draft-pool-container"),"active");
   });
 
   $(".builder-view").click(function(){
-    //repeatedly adds pool to builder
-    $(".draft-pool").html(cardPoolToTable(currentPool));
+    setActiveTab($(".deck-builder-container"),$(".deck-builder-tab"),"active");
   });
 
   $(".log-fetched").click(function(){
     console.log(fetchedCards);
   });
+
+  $(".draft-pool-tab").click(function(){
+    $(this).tab('show');
+  });
+
+  $(".deck-builder-tab").click(function(){
+    $(this).tab('show');
+  });
+
+  $('.myModal').on('hidden.bs.modal', function () {
+    setActiveTab($(".draft-pool-tab"),$(".draft-pool-container"),"inactive");
+    setActiveTab($(".deck-builder-container"),$(".deck-builder-tab"),"inactive");
+  })
 });

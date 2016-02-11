@@ -14,7 +14,8 @@
       <h3>card pool</h3>
       <textarea name="" id="" cols="30" rows="16"></textarea>
       <button class="btn btn-success add-to-pool center-block">add to pool</button>
-      <button class="btn btn-warning builder-view" type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">open deck builder</button>
+      <button class="btn btn-warning pool-view" data-toggle="modal" data-target=".myModal">view card pool</button>
+      <button class="btn btn-warning builder-view" data-toggle="modal" data-target=".myModal">view deck builder</button>
       <button class="btn btn-danger log-fetched">log fetched cards</button>
     </div>
   </div>
@@ -24,30 +25,34 @@
     <div class="btn btn-primary">add card</div>
   </div>
 
-  <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div data-toggle="tab" class="modal fade myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-          <h4 class="modal-title" id="myModalLabel">deck builder</h4>
+          <ul class="nav nav-tabs" role="tablist">
+            <li role="presentation" class="draft-pool-tab"><a href=".draft-pool-container" aria-controls="home" role="tab" data-toggle="tab">card pool</a></li>
+            <li role="presentation" class="deck-builder-tab"><a href=".deck-builder-container" aria-controls="profile" role="tab" data-toggle="tab">deck builder</a></li>
+          </ul>
         </div>
         <div class="modal-body">
-          <div class="draft-pool">
-            <h4>draft pool</h4>
-          </div>
-          <div class="my-deck">
-            <h4>my deck</h4>
+          <div class="tab-content">
+            <div role="tabpanel" class="tab-pane draft-pool-container">
+              <div class="draft-pool">
+              </div>
+            </div>
+            <div role="tabpanel" class="tab-pane deck-builder-container">
+              test
+            </div>
           </div>
         </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary">Save changes</button>
-        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
       </div>
     </div>
   </div>
 
-  <script type="template" class="pool-builder"></script>
   <script src="scripts/jquery-min.js"></script>
   <script src="scripts/bootstrap.min.js"></script>
   <script src="scripts/scripts.js"></script>
