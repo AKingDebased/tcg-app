@@ -4,8 +4,8 @@
   <meta charset="utf-8">
   <title></title>
   <link rel="stylesheet" href="css/cosmo-bootstrap.css">
-  <link rel="stylesheet" href="css/styles.css">
   <link rel="stylesheet" href="css/animate.css">
+  <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
 
@@ -16,7 +16,7 @@
       <button class="btn btn-success add-to-pool center-block">add to pool</button>
       <button class="btn btn-warning pool-view" data-toggle="modal" data-target=".myModal">view card pool</button>
       <button class="btn btn-warning builder-view" data-toggle="modal" data-target=".myModal">view deck builder</button>
-      <button class="btn btn-danger log-fetched">log & load fetched cards</button>
+      <button class="btn btn-danger log-fetched">log fetched cards</button>
     </div>
   </div>
 
@@ -39,6 +39,7 @@
           <div class="tab-content">
             <div role="tabpanel" class="tab-pane draft-pool-container">
               <div class="draft-pool">
+                <!-- not hugging the top of their div -->
                 <div class="draft-col white-col"></div>
                 <div class="draft-col blue-col"></div>
                 <div class="draft-col black-col"></div>
@@ -48,9 +49,19 @@
                 <div class="draft-col colorless-col"></div>
               </div>
             </div>
-
             <div role="tabpanel" class="tab-pane deck-builder-container">
-              test
+              <div class="main-board">
+                <h3>main board</h3>
+              </div>
+              <div class="side-board">
+                <h3>side board</h3>
+              </div>
+              <button class="btn btn-primary randMainboard">
+                random mainboard
+              </button>
+              <button class="btn btn-primary save-deck">
+                save deck
+              </button>
             </div>
           </div>
         </div>
@@ -62,9 +73,13 @@
   </div>
 </div>
 
-<script src="scripts/jquery-min.js"></script>
-<script src="scripts/underscore.js"></script>
-<script src="scripts/bootstrap.min.js"></script>
-<script src="scripts/scripts.js"></script>
+<script src="scripts/lib/jquery.min.js"></script>
+<script src="scripts/lib/underscore.js"></script>
+<script src="scripts/lib/bootstrap.min.js"></script>
+<script src="scripts/lib/backbone.js"></script>
+<script src="scripts/models.js"></script>
+<script src="scripts/views.js"></script>
+<script src="scripts/card-functions.js"></script>
+<script src="scripts/app.js"></script>
 </body>
 </html>

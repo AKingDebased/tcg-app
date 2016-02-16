@@ -28,8 +28,13 @@ body{
   margin:3px 0px;
 }
 
+/*these colors need tweaking*/
 .white-col{
   border: 3px solid darkgrey;
+}
+
+.white-col li:hover{
+  background-color:lightblue;
 }
 
 .blue-col{
@@ -37,9 +42,17 @@ body{
   border: 3px solid #0099e6;
 }
 
+.blue-col li:hover{
+  background-color:#C7F1FF
+}
+
 .black-col{
   background-color:#bfbfbf;
   border: 3px solid black;
+}
+
+.black-col li:hover{
+  background-color:#CCCCCC;
 }
 
 .red-col{
@@ -47,9 +60,17 @@ body{
   border: 3px solid #cc0000;
 }
 
+.red-col li:hover{
+  background-color:#FF8A97;
+}
+
 .green-col{
   background-color:#99e699;
   border: 3px solid #248f24;
+}
+
+.green-col li:hover{
+  background-color:#A6FFAD;
 }
 
 .multi-col{
@@ -57,9 +78,17 @@ body{
   border: 3px solid #ffd966;
 }
 
+.multi-col li:hover{
+  background-color:#E0D900;
+}
+
 .colorless-col{
   background-color:#e0e0d1;
   border: 3px solid #8a8a5c;
+}
+
+.colorless-col li:hover{
+  background-color:#E8E8E8;
 }
 
 .my-hand{
@@ -72,6 +101,12 @@ body{
 
 .pool-builder-modal{
   width:1400px;
+  transition: width 1s;
+}
+
+.deck-builder-modal{
+  width:900px;
+  transition:width 1s
 }
 
 .pool-builder{
