@@ -7,15 +7,30 @@
 //     }
 //   }
 // });
-
-var Card = Backbone.Model.extend({
-  defaults:{
-    name:"",
-    colors:[],
-    types:[]
+var Game = Backbone.Model.extend({
+  defaults:function(){
+    return {
+      cardPool: []
+    }
   }
 });
 
-var Cards = Backbone.Collection.extend({
-  model: Card
+var Player = Backbone.Model.extend({
+  defaults:function(){
+    return {
+      name:"",
+      mainboard:[],
+      sideboard:[]
+    }
+  }
+});
+
+var Card = Backbone.Model.extend({
+  defaults:function(){
+    return{
+      name:"",
+      colors:[],
+      types:[]
+    }
+  }
 });

@@ -44,14 +44,14 @@ var populateMainboard = function(cards){
 
 var sortByColor = function(cards){
   //returns an object containing arrays of all the sorted cards
-  return _.groupBy(cards, function(card) {
-    if (!card.hasOwnProperty("colors")) {
+  return cards.groupBy(cards, function(card) {
+    if (card.get("colors").length < 1) {
       return "colorless";
     }
-    if (card.colors.length > 1) {
+    if (card.get("colors").length > 1) {
       return "multicolor";
     } else {
-      return card.colors[0];
+      return card.get("colors")[0];
     }
   });
   //underscore, you beautiful bastard

@@ -1,20 +1,9 @@
 $(function(){
-  //temporary global variable to contain card pool
-  //should eventually be on firebase
-  var fetchedCards = [];
-  var myCardPool;
-  var Game = function(cardPool){
-    this.cardPool = cardPool;
-  }
-
-  var Player = function(name,mainboard,sideboard){
-    this.name = name;
-    this.mainboard = mainboard;
-    this.sideboard = sideboard;
-  }
-
+  //models should eventually be fetched from firebase
   var player = new Player();
-  var game = new Game(new Cards());
+  var game = new Game({
+    cardPool: new Cards()
+  });
 
   $(".add-to-pool").click(function(){
     var cardsString = $(".pool-builder textarea").val().split("\n");
@@ -23,12 +12,11 @@ $(function(){
     _.each(cardsString,function(currentCard){
       //asynchronicity needs to be handled. maybe use a promise?
       $.get("https://api.deckbrew.com/mtg/cards/" + formatForAJAX(currentCard),function(fetchedCard){
-        game.cardPool.add(new Card({
+        game.get("cardPool").add(new Card({
           name: fetchedCard.name,
           colors: fetchedCard.colors,
           types: fetchedCard.types
         }));
-        var cardLI = new CardLIView();
       });
     });
     //need a promise here to load sorted cards to DOM
@@ -44,8 +32,9 @@ $(function(){
   });
 
   $(".log-fetched").click(function(){
-    console.log("sorted", sortByColor(game.cardPool.toJSON()));
-    populateColorCols(sortByColor(game.cardPool.toJSON()));
+    console.log(game.get("cardPool").toJSON())
+    console.log(sortByColor(game.get("cardPool")));
+    //populateColorCols(sortByColor(game.cardPool.toJSON()));
   });
 
   //pool/builder modal
@@ -64,6 +53,7 @@ $(function(){
 
   //draft builder tab
   $(".randMainboard").click(function(){
+    //change myCardPool & fetchedCards variables
     myCardPool = randomMainboard(fetchedCards);
     populateMainboard(player.mainboard);
   });
@@ -80,7 +70,7 @@ $(function(){
     $(this).remove();
   });
 
-  $(".save-deck").click(function(){
-
-  });
+  // $(".save-deck").click(function(){
+  //
+  // });
 });
