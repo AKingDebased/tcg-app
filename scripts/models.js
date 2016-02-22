@@ -29,8 +29,9 @@ var Card = Backbone.Model.extend({
   defaults:function(){
     return{
       name:"",
-      colors:[],
-      types:[]
+      colors:undefined,
+      types:[],
+      image:""
     }
   }
 });

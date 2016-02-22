@@ -15,6 +15,7 @@ body{
   height:160px;
 }
 
+/* card pool view */
 .draft-col{
   width:180px;
   display:inline-block;
@@ -22,75 +23,75 @@ body{
   padding:5px;
 }
 
-.draft-col ul{
+.draft-col li{
   list-style-type:none;
   padding:0px;
   margin:3px 0px;
 }
 
-/*these colors need tweaking*/
-.white-col{
+.white{
   border: 3px solid darkgrey;
 }
 
-.white-col li:hover{
+.white li:hover{
   background-color:lightblue;
 }
 
-.blue-col{
+.blue{
   background-color:#66ccff;
   border: 3px solid #0099e6;
 }
 
-.blue-col li:hover{
+.blue li:hover{
   background-color:#C7F1FF
 }
 
-.black-col{
+.black{
   background-color:#bfbfbf;
   border: 3px solid black;
 }
 
-.black-col li:hover{
+.black li:hover{
   background-color:#CCCCCC;
 }
 
-.red-col{
+.red{
   background-color:#ff6666;
   border: 3px solid #cc0000;
 }
 
-.red-col li:hover{
+.red li:hover{
   background-color:#FF8A97;
 }
 
-.green-col{
+.green{
   background-color:#99e699;
   border: 3px solid #248f24;
 }
 
-.green-col li:hover{
+.green li:hover{
   background-color:#A6FFAD;
 }
 
-.multi-col{
+.multicolor{
   background-color:#ffff99;
   border: 3px solid #ffd966;
 }
 
-.multi-col li:hover{
+.multicolor li:hover{
   background-color:#E0D900;
 }
 
-.colorless-col{
+.colorless{
   background-color:#e0e0d1;
   border: 3px solid #8a8a5c;
 }
 
-.colorless-col li:hover{
+.colorless li:hover{
   background-color:#E8E8E8;
 }
 
+/* game board */
 .my-hand{
   bottom:0px;
 }
@@ -99,6 +100,7 @@ body{
   top:0px;
 }
 
+/* pool builder */
 .pool-builder-modal{
   width:1400px;
   transition: width 1s;
