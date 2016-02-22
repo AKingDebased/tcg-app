@@ -42,8 +42,7 @@ $(function(){
   $(".log-fetched").click(function(){
     fetchedCards = sortByColor(fetchedCards);
 
-    //populate color sorted models width
-    //new card models
+    //populate cards collections with color sorted card models
     _.each(fetchedCards,function(cards,colorName){
       _.each(cards,function(card){
         game.get("cardPool")[colorName].add(new Card({
@@ -54,7 +53,6 @@ $(function(){
         }));
       })
     });
-    console.log(game.get("cardPool"));
   });
 
   //pool & builder modal
@@ -75,7 +73,7 @@ $(function(){
   $(".randMainboard").click(function(){
     //change myCardPool & fetchedCards variables
     myCardPool = randomMainboard(fetchedCards);
-    populateMainboard(player.mainboard);
+    populateMainboard(game.get);
   });
 
   $(".main-board").on("click","li",function(){

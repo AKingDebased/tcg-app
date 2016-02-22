@@ -15,33 +15,6 @@ var formatForAJAX = function(card){
   return card.toLowerCase().split(" ").join("-");
 };
 
-// var createNameList = function(cards){
-//   var $el = $("<ul>");
-//
-//   _.each(cards,function(card){
-//     $el.append($("<li>").append(card.name));
-//   });
-//
-//   return $el;
-// };
-
-// var populateColorCols = function(fetchedCards){
-//   //currently unalphabetized
-//   $(".white-col").html(createNameList(fetchedCards.white));
-//   $(".blue-col").html(createNameList(fetchedCards.blue));
-//   $(".black-col").html(createNameList(fetchedCards.black));
-//   $(".red-col").html(createNameList(fetchedCards.red));
-//   $(".green-col").html(createNameList(fetchedCards.green));
-//   $(".multi-col").html(createNameList(fetchedCards.multicolor));
-//   $(".colorless-col").html(createNameList(fetchedCards.colorless));
-// };
-
-// var populateMainboard = function(cards){
-//   _.each(cards,function(card){
-//     $("<li>").text(card.name).appendTo($(".main-board"));
-//   });
-// };
-
 var sortByColor = function(cardPool){
   //returns an object containing arrays of all the sorted cards
   return _.groupBy(cardPool, function(card) {
@@ -91,14 +64,3 @@ var randomMainboard = function(fetchedCards){
 
   return pool;
 };
-
-//temporary until Backbone migration
-// var displayOnBoard = function(cardName,board){
-//   $("<li>").text(cardName).appendTo($("." + board + "-board"));
-// }
-
-// var saveDeck = function(deck){
-//   playerPool.maindeck = {}
-//
-//   return playerPool;
-// }

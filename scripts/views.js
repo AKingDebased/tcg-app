@@ -58,3 +58,7 @@ var CardPoolView = Backbone.View.extend({
     })
   }
 });
+
+Var DeckBuilderView = Backbone.View.extend({
+  el:".deck-builder-container"
+});
