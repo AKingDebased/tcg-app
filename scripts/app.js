@@ -1,20 +1,13 @@
-$(function(){
-  //models should eventually be fetched from firebase
-  var fetchedCards = [];
-  var game = new Game({
-    cardPool: {
-      white:new Cards(),
-      blue:new Cards(),
-      black:new Cards(),
-      red:new Cards(),
-      green:new Cards(),
-      colorless:new Cards(),
-      multicolor:new Cards()
-    }
-  });
-  var player = new Player({});
+//NAUGHTY GLOBAL VARIABLE
+//models should eventually all by synched to firebase
+var GlobalGame = new Game();
 
-  var testPoolView = new CardPoolView({model:game});
+$(function(){
+  var fetchedCards = [];
+
+  var player = new Player()
+  var testPoolView = new CardPoolView();
+  var deckBuilderView = new DeckBuilderView({model:player});
 
 
   $(".add-to-pool").click(function(){
@@ -45,7 +38,7 @@ $(function(){
     //populate cards collections with color sorted card models
     _.each(fetchedCards,function(cards,colorName){
       _.each(cards,function(card){
-        game.get("cardPool")[colorName].add(new Card({
+        GlobalGame.get("cardPool")[colorName].add(new Card({
           name:card.name,
           colors:card.colors,
           types:card.types,
@@ -70,12 +63,6 @@ $(function(){
   })
 
   //draft builder tab
-  $(".randMainboard").click(function(){
-    //change myCardPool & fetchedCards variables
-    myCardPool = randomMainboard(fetchedCards);
-    populateMainboard(game.get);
-  });
-
   $(".main-board").on("click","li",function(){
     //temporary until Backbone migration
     addToBoard($(this).text(),"side");

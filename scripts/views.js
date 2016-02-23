@@ -14,22 +14,18 @@ var CardPoolColView = Backbone.View.extend({
   itemViews:[],
   initialize:function(){
     _.bindAll(this,"render");
-    this.collection.bind("add",this.addItemView,this);
-    this.collection.bind("add",this.render,this);
+    this.listenTo(this.collection,"add",function(card){
+      this.addItemView(card);
+      this.renderAdded();
+    });
   },
   addItemView:function(cardModel){
     this.itemViews.push(new CardPoolItemView({
       model:cardModel
     }));
   },
-  render:function(){
-    var self = this;
-    if(this.collection.length === 0){
-      this.$el.html("");
-    } else {
-      this.$el.append(this.itemViews[this.itemViews.length-1].render().$el);
-    }
-
+  renderAdded:function(){
+    this.$el.append(this.itemViews[this.itemViews.length-1].render().$el);
     return this;
   }
 });
@@ -44,7 +40,7 @@ var CardPoolView = Backbone.View.extend({
   },
   createColumns:function(){
     var self = this;
-    _.each(this.model.get("cardPool"),function(color,colorName){
+    _.each(GlobalGame.get("cardPool"),function(color,colorName){
       self.columns.push(new CardPoolColView({
         className:"draft-col " + colorName,
         collection: color
@@ -59,6 +55,11 @@ var CardPoolView = Backbone.View.extend({
   }
 });
 
-Var DeckBuilderView = Backbone.View.extend({
-  el:".deck-builder-container"
+var DeckBuilderView = Backbone.View.extend({
+  el:".deck-builder-container",
+  events:{
+    "click .randMainboard":function(){
+      GlobalGame.randomPack(15,this.model);
+    },
+  }
 });
