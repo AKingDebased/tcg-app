@@ -4,6 +4,7 @@ var CardPoolItemView = Backbone.View.extend({
     _.bindAll(this,"render");
   },
   render:function(){
+    console.log(this.model);
     this.$el.html(this.model.get("name"));
     return this;
   }
@@ -57,9 +58,18 @@ var CardPoolView = Backbone.View.extend({
 
 var DeckBuilderView = Backbone.View.extend({
   el:".deck-builder-container",
+  initialize:function(){
+    this.listenTo(this.model,"change:mainboard",this.updateMainboard)
+  },
+  updateMainboard:function(change){
+    change.get("mainboard").each(function(card){
+      var cardItemView = new CardPoolItemView({model:card});
+      this.$(".mainboard").append(cardItemView.render().$el);
+    })
+  },
   events:{
     "click .randMainboard":function(){
-      GlobalGame.randomPack(15,this.model);
-    },
+      this.model.set({mainboard: GlobalGame.randomPack(15,this.model)});
+    }
   }
 });
