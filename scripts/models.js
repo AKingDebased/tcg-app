@@ -12,7 +12,7 @@ var Game = Backbone.Model.extend({
       }
     }
   },
-  randomPack:function(packSize,player){
+  randomPack:function(packSize){
     //an embarrassingly terrible algorithm
     var pack = new Cards();
     var colorKeys = Object.keys(this.get("cardPool"));
@@ -30,7 +30,7 @@ var Game = Backbone.Model.extend({
     while(pack.length < packSize){
       do{
         if(_.size(emptyColors) >= 7){
-          return pack;
+          return null;
         }
 
         randomColorIndex = Math.floor(Math.random() * colorKeys.length)
@@ -59,6 +59,17 @@ var Player = Backbone.Model.extend({
       mainboard:new Cards(),
       sideboard:new Cards()
     }
+  },
+  initialize: function() {
+    //if the mainboard is replaced
+    this.listenTo(this, "change:mainboard", function(change) {
+      this.listenTo(change.get("mainboard"), "remove", function() {
+        EventHub.trigger("removedMainboardItem")
+      });
+      this.listenTo(change.get("mainboard"), "add", function() {
+        EventHub.trigger("addedMainboardItem");
+      });
+    })
   }
 });
 

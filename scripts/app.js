@@ -1,6 +1,7 @@
-//NAUGHTY GLOBAL VARIABLE
+//NAUGHTY GLOBAL VARIABLES
 //models should eventually all by synched to firebase
 var GlobalGame = new Game();
+var EventHub = _.extend({}, Backbone.Events);
 
 $(function(){
   var fetchedCards = [];

@@ -1,10 +1,31 @@
+//prevent memory leaks when removing views from DOM
+Backbone.View.prototype.close = function(){
+  this.remove();
+  this.unbind();
+  if(this.onClose){
+    this.onClose();
+  }
+};
+
 var CardPoolItemView = Backbone.View.extend({
   tagName:"li",
   initialize:function(){
     _.bindAll(this,"render");
   },
+  events:{
+    "click":function(){
+      EventHub.trigger("clickedPoolItem",this);
+    }
+  },
+  renderMainboard:function(){
+    this.$el.html(this.model.get("name")).addClass("mainboard-item");
+    return this;
+  },
+  renderSideboard:function(){
+    this.$el.html(this.model.get("name")).addClass("sideboard-item");
+    return this;
+  },
   render:function(){
-    console.log(this.model);
     this.$el.html(this.model.get("name"));
     return this;
   }
@@ -59,17 +80,44 @@ var CardPoolView = Backbone.View.extend({
 var DeckBuilderView = Backbone.View.extend({
   el:".deck-builder-container",
   initialize:function(){
-    this.listenTo(this.model,"change:mainboard",this.updateMainboard)
+    this.listenTo(this.model.get("mainboard"),"add",this.addToMainboard);
+    this.listenTo(this.model.get("mainboard"),"remove",this.addToSideboard);
+
+    var self = this;
+    EventHub.bind("clickedPoolItem",function(poolItem){
+      if(poolItem.$el.attr("class") === "mainboard-item"){
+        self.model.get("sideboard").push(self.model.get("mainboard").remove(poolItem.model));
+      } else if(poolItem.$el.attr("class") === "sideboard-item"){
+        self.model.get("mainboard").push(self.model.get("sideboard").remove(poolItem.model));
+      } else {
+        throw new "invalid board class name";
+      }
+      poolItem.close();
+    });
   },
-  updateMainboard:function(change){
-    change.get("mainboard").each(function(card){
-      var cardItemView = new CardPoolItemView({model:card});
-      this.$(".mainboard").append(cardItemView.render().$el);
+  addToMainboard:function(card){
+    var cardItemView = new CardPoolItemView({
+      model:card
     })
+
+    this.$(".mainboard").append(cardItemView.renderMainboard().$el);
   },
+  addToSideboard:function(card){
+    var cardItemView = new CardPoolItemView({
+      model:card
+    })
+
+    this.$(".sideboard").append(cardItemView.renderSideboard().$el);
+  },
+
   events:{
     "click .randMainboard":function(){
-      this.model.set({mainboard: GlobalGame.randomPack(15,this.model)});
+      var randPack = GlobalGame.randomPack(15);
+      var self = this;
+
+      randPack.each(function(card){
+        self.model.get("mainboard").push(card);
+      });
     }
   }
 });

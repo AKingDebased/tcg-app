@@ -50,17 +50,3 @@ var setActiveTab = function($tab,$pane,state){
     $pane.removeClass("active");
   }
 };
-
-var randomMainboard = function(fetchedCards){
-  var pool = {
-    mainboard:[],
-    sideboard:[]
-  };
-
-  while(pool.mainboard.length < 45){
-    randNum = _.random(0,fetchedCards.length - 1);
-    pool.mainboard.push(fetchedCards[randNum]);
-  }
-
-  return pool;
-};
