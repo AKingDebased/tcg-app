@@ -57,7 +57,8 @@ var Player = Backbone.Model.extend({
     return {
       name:"",
       mainboard:new Cards(),
-      sideboard:new Cards()
+      sideboard:new Cards(),
+      deck:new Cards()
     }
   },
   initialize: function() {

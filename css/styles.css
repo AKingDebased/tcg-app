@@ -15,6 +15,21 @@ body{
   height:160px;
 }
 
+.deck{
+  position:absolute;
+  bottom:0px;
+  right:375px;
+}
+
+.deck img{
+  height:175px;
+}
+
+.card{
+  height:145px;
+  margin:5px;
+}
+
 /* card pool view */
 .draft-col{
   width:180px;

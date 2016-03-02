@@ -49,6 +49,14 @@ $(function(){
     });
   });
 
+  //hand
+  $(".deck").on("dblclick",function(){
+    var drawnCard = player.get("deck").pop();
+    var $cardImage = $("<img>").attr("src",drawnCard.get("image")).addClass("card");
+
+    $(".my-hand").append($cardImage);
+  });
+
   //pool & builder modal
   $(".draft-pool-tab").click(function(){
     setActiveTab($(".deck-builder-tab"),$(".draft-pool-container"),"active");
@@ -63,20 +71,13 @@ $(function(){
     setActiveTab($(".deck-builder-container"),$(".deck-builder-tab"),"inactive");
   })
 
+
   //draft builder tab
-  $(".main-board").on("click","li",function(){
-    //temporary until Backbone migration
-    addToBoard($(this).text(),"side");
-    $(this).remove();
-  });
+  $(".save-deck").click(function(){
+    player.get("mainboard").each(function(card){
+      player.get("deck").push(card);
+    });
 
-  $(".side-board").on("click","li",function(){
-    //temporary until Backbone migration
-    addToBoard($(this).text(),"main");
-    $(this).remove();
+    console.log(player.get("deck"));
   });
-
-  // $(".save-deck").click(function(){
-  //
-  // });
 });
