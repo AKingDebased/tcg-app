@@ -7,6 +7,45 @@ Backbone.View.prototype.close = function(){
   }
 };
 
+var LogInView = Backbone.View.extend({
+  el: "body",
+  template: _.template($(".log-in-template").html()),
+  events:{
+    "click .log-in":"logIn"
+  },
+  logIn:function(){
+    var $username = $(".username").val();
+    var $userPassword = $(".password").val();
+    var userInfo = {};
+    var self = this;
+
+    userInfo[$username] = {password: $userPassword};
+
+    users.child($username).once("value",function(snapshot){
+      if(!snapshot.exists()){
+        alert("account created!");
+        users.update(userInfo);
+        self.fadeOut();
+      } else if ($userPassword === snapshot.val().password){
+        alert("welcome back!");
+        self.fadeOut();
+      } else {
+        alert("invalid username or password.");
+      }
+    });
+  },
+  fadeOut:function(){
+    this.$(".log-in-screen").fadeOut(1000);
+  },
+  initialize:function(){
+    _.bindAll(this,"render","logIn","fadeOut");
+    this.render();
+  },
+  render:function(){
+    this.$el.append(this.template);
+  },
+});
+
 var CardPoolItemView = Backbone.View.extend({
   tagName:"li",
   initialize:function(){

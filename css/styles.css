@@ -6,6 +6,36 @@ body{
   background-color:dimgrey;
 }
 
+/* log in screen */
+.log-in-screen{
+  position:relative;
+  background-color:grey;
+  width:100%;
+  height:1600px;
+  z-index:1;
+}
+
+.log-in-screen input{
+  color:black;
+}
+
+.log-in-box{
+  font-size:35px;
+  color:white;
+  position:relative;
+  top:250px;
+  max-width:450px;
+  text-align:center;
+}
+
+.log-in{
+  display:block;
+  width:170px;
+  height:65px;
+  margin-top:15px;
+  font-size:28px;
+}
+
 .hand{
   background-color:darkgrey;
   position:absolute;
