@@ -32,17 +32,22 @@ var LogInView = Backbone.View.extend({
       } else if (!committed){
         if($password === snapshot.val().password){
           alert("welcome back!");
+          me = $username;
+          addPlayer($username);
           self.fadeOut();
         } else {
           alert("user already exists.");
         }
       } else {
         alert("user created!");
+        addPlayer($username);
+        me = $username;
         self.fadeOut();
       }
     });
   },
   fadeOut:function(){
+    //should remove log in screen from DOM
     this.$(".log-in-screen").fadeOut(1000);
   },
   initialize:function(){

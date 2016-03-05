@@ -50,3 +50,29 @@ var setActiveTab = function($tab,$pane,state){
     $pane.removeClass("active");
   }
 };
+
+var addPlayer = function(username){
+  players.child(username).transaction(function(player){
+    if(player === null){
+      if(playersCount >= 2){
+        return;  
+      } else {
+        var player = {};
+
+        return player[username] = {hand:"",board:""};
+      }
+    } else {
+      return;
+    }
+  },function(error,committed,snapshot){
+    if(error){
+      alert("shit went wrong");
+    } else if(committed){
+      alert(username + " has entered the game!");
+    } else if(!committed){
+      alert(username + " is already in the room, or room is full.");
+    } else {
+      alert("god help you");
+    }
+  });
+}

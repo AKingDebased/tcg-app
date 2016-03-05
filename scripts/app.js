@@ -4,7 +4,10 @@ var GlobalGame = new Game();
 var EventHub = _.extend({}, Backbone.Events);
 var firebase = new Firebase("https://tcg-app.firebaseio.com/");
 var users = firebase.child("users");
-var opponentHand = firebase.child("opponentHand");
+var game = firebase.child("game");
+var players = game.child("players");
+var playersCount = 0;
+
 
 var fetchedCards = [];
 
@@ -13,6 +16,10 @@ var testPoolView = new CardPoolView();
 var deckBuilderView = new DeckBuilderView({model:player});
 
 var logInView = new LogInView();
+
+players.on("child_added",function(){
+  playersCount++;
+})
 
 $(".add-to-pool").click(function(){
   var cardsString = $(".pool-builder textarea").val().split("\n");
