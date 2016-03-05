@@ -15,22 +15,30 @@ var LogInView = Backbone.View.extend({
   },
   logIn:function(){
     var $username = $(".username").val();
-    var $userPassword = $(".password").val();
+    var $password = $(".password").val();
     var userInfo = {};
     var self = this;
 
-    userInfo[$username] = {password: $userPassword};
-
-    users.child($username).once("value",function(snapshot){
-      if(!snapshot.exists()){
-        alert("account created!");
-        users.update(userInfo);
-        self.fadeOut();
-      } else if ($userPassword === snapshot.val().password){
-        alert("welcome back!");
-        self.fadeOut();
+    users.child($username).transaction(function(user){
+      if(user === null){
+        return userInfo[$username] = {password:$password};
       } else {
-        alert("invalid username or password.");
+        return;
+      }
+    },function(error,committed,snapshot){
+      if(error){
+        alert("error in account creation. try again! ");
+        console.log(error);
+      } else if (!committed){
+        if($password === snapshot.val().password){
+          alert("welcome back!");
+          self.fadeOut();
+        } else {
+          alert("user already exists.");
+        }
+      } else {
+        alert("user created!");
+        self.fadeOut();
       }
     });
   },
