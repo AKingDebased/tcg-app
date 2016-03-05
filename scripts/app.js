@@ -7,8 +7,8 @@ var users = firebase.child("users");
 var game = firebase.child("game");
 var players = game.child("players");
 var playersCount = 0;
-
-
+var me;
+var opponent;
 var fetchedCards = [];
 
 var player = new Player()
@@ -17,9 +17,15 @@ var deckBuilderView = new DeckBuilderView({model:player});
 
 var logInView = new LogInView();
 
-players.on("child_added",function(){
+players.on("child_added",function(snap){
   playersCount++;
+  console.log("testing");
+  //console.log(snap.val());
 })
+
+players.on("child_removed",function(){
+  playersCount--;
+});
 
 $(".add-to-pool").click(function(){
   var cardsString = $(".pool-builder textarea").val().split("\n");
@@ -63,6 +69,8 @@ $(".log-fetched").click(function(){
 $(".deck").on("dblclick",function(){
   var drawnCard = player.get("deck").pop();
   var $cardImage = $("<img>").attr("src",drawnCard.get("image")).addClass("card");
+
+  players.child(me).child("hand").push(drawnCard.toJSON());
 
   $(".my-hand").append($cardImage);
 });
