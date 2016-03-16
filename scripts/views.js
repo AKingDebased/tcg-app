@@ -33,22 +33,25 @@ var LogInView = Backbone.View.extend({
         if($password === snapshot.val().password){
           alert("welcome back!");
           me = $username;
-          addPlayer($username);
+          //addPlayer($username);
           self.fadeOut();
+          gameManager.startGame($username);
         } else {
           alert("user already exists.");
         }
       } else {
         alert("user created!");
-        addPlayer($username);
+        //addPlayer($username);
         me = $username;
         self.fadeOut();
+        gameManager.startGame($username);
       }
     });
   },
   fadeOut:function(){
     //should remove log in screen from DOM
     this.$(".log-in-screen").fadeOut(1000);
+    //this.close();
   },
   initialize:function(){
     _.bindAll(this,"render","logIn","fadeOut");
@@ -114,7 +117,7 @@ var CardPoolView = Backbone.View.extend({
   },
   createColumns:function(){
     var self = this;
-    _.each(GlobalGame.get("cardPool"),function(color,colorName){
+    _.each(GameManager.cardPool,function(color,colorName){
       self.columns.push(new CardPoolColView({
         className:"draft-col " + colorName,
         collection: color

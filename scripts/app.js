@@ -1,31 +1,25 @@
 //NAUGHTY GLOBAL VARIABLES
-//models should eventually all by synched to firebase
-var GlobalGame = new Game();
+//models should eventually all by synced to firebase
+var gameManager = new GameManager();
 var EventHub = _.extend({}, Backbone.Events);
 var firebase = new Firebase("https://tcg-app.firebaseio.com/");
 var users = firebase.child("users");
 var game = firebase.child("game");
-var players = game.child("players");
-var playersCount = 0;
-var me;
-var opponent;
 var fetchedCards = [];
 
-var player = new Player()
+//var player = new Player()
 var testPoolView = new CardPoolView();
-var deckBuilderView = new DeckBuilderView({model:player});
+//var deckBuilderView = new DeckBuilderView({model:player});
 
 var logInView = new LogInView();
 
-players.on("child_added",function(snap){
-  playersCount++;
-  console.log("testing");
-  //console.log(snap.val());
-})
-
-players.on("child_removed",function(){
-  playersCount--;
-});
+// players.on("child_added",function(snap){
+//   playersCount++;
+// })
+//
+// players.on("child_removed",function(){
+//   playersCount--;
+// });
 
 $(".add-to-pool").click(function(){
   var cardsString = $(".pool-builder textarea").val().split("\n");
@@ -52,15 +46,15 @@ $(".builder-view").click(function(){
 $(".log-fetched").click(function(){
   fetchedCards = sortByColor(fetchedCards);
 
-  //populate cards collections with color sorted card models
+  // populate cards collections with color sorted card models
   _.each(fetchedCards,function(cards,colorName){
     _.each(cards,function(card){
-      GlobalGame.get("cardPool")[colorName].add(new Card({
+      gameManager.cardPool[colorName].create({
         name:card.name,
         colors:card.colors,
         types:card.types,
         image:card.editions[0].image_url
-      }));
+      });
     })
   });
 });
