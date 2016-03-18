@@ -50,9 +50,8 @@ var GameManager = function() {
     firebase.child("new-game/players").once("value", function(snap) {
       if (snap.val() === null) {
         console.log("creating new game.");
-        firebase.child("new-game").set({
-          playerCount: 0,
-          players:newPlayer
+        firebase.child("new-game").transaction(function(currentData){
+          console.log(currentData);
         });
       } else {
         console.log("game in session.");
@@ -68,6 +67,9 @@ var GameManager = function() {
         colorless: new Cards("new-game", "colorless"),
         multicolor: new Cards("new-game", "multicolor")
       };
+
+      //should find a better place for this
+      var testPoolView = new CardPoolView();
     });
   }
 

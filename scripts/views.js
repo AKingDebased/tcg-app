@@ -117,7 +117,8 @@ var CardPoolView = Backbone.View.extend({
   },
   createColumns:function(){
     var self = this;
-    _.each(GameManager.cardPool,function(color,colorName){
+    console.log(gameManager);
+    _.each(gameManager.cardPool,function(color,colorName){
       self.columns.push(new CardPoolColView({
         className:"draft-col " + colorName,
         collection: color
