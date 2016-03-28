@@ -1,22 +1,12 @@
 //NAUGHTY GLOBAL VARIABLES
 //models should eventually all by synced to firebase
 var gameManager = new GameManager();
+var playerManager;
 var EventHub = _.extend({}, Backbone.Events);
-var firebase = new Firebase("https://tcg-app.firebaseio.com/");
-var users = firebase.child("users");
-var currentGame = firebase.child("new-game");
-var players = currentGame.child("players");
-var playerCount = currentGame.child("playerCount");
 var fetchedCards = [];
 
-//var player = new Player()
-//var deckBuilderView = new DeckBuilderView({model:player});
-
 var logInView = new LogInView();
-
-players.on("child_removed",function(){
-  console.log("player has left.");
-});
+var deckBuilderView;
 
 $(".add-to-pool").click(function(){
   var cardsString = $(".pool-builder textarea").val().split("\n");
@@ -54,6 +44,8 @@ $(".log-fetched").click(function(){
       });
     })
   });
+
+  fetchedCards = [];
 });
 
 //hand

@@ -11,40 +11,41 @@ var LogInView = Backbone.View.extend({
   el: "body",
   template: _.template($(".log-in-template").html()),
   events:{
-    "click .log-in":"logIn"
+    "click .log-in":"logIn",
+    "keydown .password":"logIn"
   },
-  logIn:function(){
-    var $username = $(".username").val();
+  logIn:function(event){
+    //only log in if button is clicked or enter key is pressed
+    if(!(event.which === 1 || event.which === 13)){
+      return;
+    }
+
+    var $email = $(".email").val();
     var $password = $(".password").val();
     var userInfo = {};
     var self = this;
 
-    users.child($username).transaction(function(user){
-      if(user === null){
-        return userInfo[$username] = {password:$password};
+    firebase.createUser({
+      email: $email,
+      password: $password
+    }, function(error, userData) {
+      if (error) {
+        //do error shit
+
       } else {
-        return;
+        console.log("Successfully created user account with uid:", userData.uid);
       }
-    },function(error,committed,snapshot){
+    });
+
+    firebase.authWithPassword({
+      email    : $email,
+      password : $password
+    }, function(error, authData) {
       if(error){
-        alert("error in account creation. try again! ");
-        console.log(error);
-      } else if (!committed){
-        if($password === snapshot.val().password){
-          alert("welcome back!");
-          me = $username;
-          //addPlayer($username);
-          self.fadeOut();
-          gameManager.startGame($username);
-        } else {
-          alert("user already exists.");
-        }
+        console.log("error logging in: " + error);
       } else {
-        alert("user created!");
-        //addPlayer($username);
-        me = $username;
         self.fadeOut();
-        gameManager.startGame($username);
+        gameManager.startGame();
       }
     });
   },
@@ -117,7 +118,6 @@ var CardPoolView = Backbone.View.extend({
   },
   createColumns:function(){
     var self = this;
-    console.log(gameManager);
     _.each(gameManager.cardPool,function(color,colorName){
       self.columns.push(new CardPoolColView({
         className:"draft-col " + colorName,
@@ -136,15 +136,37 @@ var CardPoolView = Backbone.View.extend({
 var DeckBuilderView = Backbone.View.extend({
   el:".deck-builder-container",
   initialize:function(){
-    this.listenTo(this.model.get("mainboard"),"add",this.addToMainboard);
-    this.listenTo(this.model.get("mainboard"),"remove",this.addToSideboard);
+    var self = this;
+    //once again, Cards is instantiating with 1 default cardPool
+    //no idea why
+    if(playerManager.mainboard.length > 0){
+      playerManager.mainboard.each(function(card){
+        if(card.get("name") === "none"){
+          return;
+        }
+        self.addToMainboard
+      });
+    }
+
+    if(playerManager.sideboard.length > 0){
+      playerManager.mainboard.each(function(card){
+        if(card.get("name") === "none"){
+          return;
+        }
+        self.addToSideboard
+      });
+    }
+
+    this.listenTo(playerManager.mainboard,"add",this.addToMainboard);
+    this.listenTo(playerManager.mainboard,"remove",this.addToSideboard);
 
     var self = this;
     EventHub.bind("clickedPoolItem",function(poolItem){
+      console.log(poolItem.model);
       if(poolItem.$el.attr("class") === "mainboard-item"){
-        self.model.get("sideboard").push(self.model.get("mainboard").remove(poolItem.model));
+        playerManager.sideboard.push(playerManager.mainboard.remove(poolItem.model));
       } else if(poolItem.$el.attr("class") === "sideboard-item"){
-        self.model.get("mainboard").push(self.model.get("sideboard").remove(poolItem.model));
+        playerManager.mainboard.push(playerManager.sideboard.remove(poolItem.model));
       } else {
         throw new "invalid board class name";
       }
@@ -168,11 +190,12 @@ var DeckBuilderView = Backbone.View.extend({
 
   events:{
     "click .randMainboard":function(){
-      var randPack = GlobalGame.randomPack(15);
-      var self = this;
+      var randPack = gameManager.randomPack(5);
 
-      randPack.each(function(card){
-        self.model.get("mainboard").push(card);
+      //backbonefire 'add' method only accepts
+      //plain objects as arguments, not models
+      _.each(randPack,function(card){
+        playerManager.mainboard.create(card);
       });
     }
   }
