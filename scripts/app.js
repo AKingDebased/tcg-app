@@ -8,6 +8,8 @@ var fetchedCards = [];
 var logInView = new LogInView();
 var deckBuilderView;
 
+var handView;
+
 $(".add-to-pool").click(function(){
   var cardsString = $(".pool-builder textarea").val().split("\n");
   $(".pool-builder textarea").val("");
@@ -50,11 +52,7 @@ $(".log-fetched").click(function(){
 
 //hand
 $(".deck").on("dblclick",function(){
-  //remove returns an array, for reasons unknown. why can't i just pop() god dammit
-  var drawnCard = playerManager.deck.remove(playerManager.deck.at(0))[0];
-  var $cardImage = $("<img>").attr("src",drawnCard.image).addClass("card");
-
-  $(".my-hand").append($cardImage);
+  EventHub.trigger("drawCard");
 });
 
 //pool & builder modal

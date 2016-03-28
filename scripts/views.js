@@ -190,3 +190,27 @@ var DeckBuilderView = Backbone.View.extend({
     }
   }
 });
+
+var ClientHandView = Backbone.View.extend({
+  el:".my-hand",
+  initialize:function(){
+    var self = this;
+
+    EventHub.bind("drawCard",function(){
+      self.drawCard();
+    });
+
+    playerManager.hand.on("add",function(card){
+      self.displayDraw(card);
+    })
+  },
+  drawCard:function(){
+    //remove returns an array, for reasons unknown. why can't i just pop() god dammit
+    playerManager.hand.create(playerManager.deck.remove(playerManager.deck.at(0))[0]);
+  },
+  displayDraw:function(card){
+    var $cardImage = $("<img>").attr("src",card.attributes.image).addClass("card");
+
+    this.$el.append($cardImage);
+  }
+});

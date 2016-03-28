@@ -64,11 +64,11 @@ var GameManager = function() {
 
         players.child(firebase.getAuth().uid).set(true);
 
-        //should find a better place for this
+        //should find a better place for these
         var testPoolView = new CardPoolView();
         playerManager = new PlayerManager();
         deckBuilderView = new DeckBuilderView();
-
+        handView = new ClientHandView();
       }
 
       console.log("GM online.");
@@ -78,6 +78,7 @@ var GameManager = function() {
       this.mainboard = new Cards("users/" + firebase.getAuth().uid + "/new-game/mainboard");
       this.sideboard = new Cards("users/" + firebase.getAuth().uid + "/new-game/sideboard");
       this.deck = new Cards("users/" + firebase.getAuth().uid + "/new-game/deck");
+      this.hand = new Cards("users/" + firebase.getAuth().uid + "/new-game/hand");
 
       console.log("player set");
     }
