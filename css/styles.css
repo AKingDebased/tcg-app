@@ -59,6 +59,15 @@ body{
 .card{
   height:145px;
   margin:5px;
+  position:relative;
+  transition: transform .4s;
+}
+
+.card:hover{
+  z-index:1;
+  transform:scale(2.8,2.8);
+  bottom:170px;
+  transition:scale .4s, position .4s;
 }
 
 /* card pool view */

@@ -137,38 +137,28 @@ var DeckBuilderView = Backbone.View.extend({
   el:".deck-builder-container",
   initialize:function(){
     var self = this;
-    //once again, Cards is instantiating with 1 default cardPool
-    //no idea why
-    if(playerManager.mainboard.length > 0){
-      playerManager.mainboard.each(function(card){
-        if(card.get("name") === "none"){
-          return;
-        }
-        self.addToMainboard
-      });
-    }
 
-    if(playerManager.sideboard.length > 0){
-      playerManager.mainboard.each(function(card){
-        if(card.get("name") === "none"){
-          return;
-        }
-        self.addToSideboard
-      });
-    }
+    playerManager.sideboard.once("sync",function(){
+      if(playerManager.sideboard.length > 0){
+        playerManager.sideboard.each(function(card){
+          if(card.get("name") === "none"){
+            return;
+          }
+          self.addToSideboard(card);
+        });
+      }
+    });
 
     this.listenTo(playerManager.mainboard,"add",this.addToMainboard);
     this.listenTo(playerManager.mainboard,"remove",this.addToSideboard);
+    this.listenTo(playerManager.sideBoard,"remove",this.addToMainboard);
 
     var self = this;
     EventHub.bind("clickedPoolItem",function(poolItem){
-      console.log(poolItem.model);
       if(poolItem.$el.attr("class") === "mainboard-item"){
         playerManager.sideboard.push(playerManager.mainboard.remove(poolItem.model));
       } else if(poolItem.$el.attr("class") === "sideboard-item"){
         playerManager.mainboard.push(playerManager.sideboard.remove(poolItem.model));
-      } else {
-        throw new "invalid board class name";
       }
       poolItem.close();
     });

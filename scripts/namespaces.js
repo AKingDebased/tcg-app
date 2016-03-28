@@ -77,6 +77,7 @@ var GameManager = function() {
     var PlayerManager = function(){
       this.mainboard = new Cards("users/" + firebase.getAuth().uid + "/new-game/mainboard");
       this.sideboard = new Cards("users/" + firebase.getAuth().uid + "/new-game/sideboard");
+      this.deck = new Cards("users/" + firebase.getAuth().uid + "/new-game/deck");
 
       console.log("player set");
     }

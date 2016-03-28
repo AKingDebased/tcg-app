@@ -50,10 +50,9 @@ $(".log-fetched").click(function(){
 
 //hand
 $(".deck").on("dblclick",function(){
-  var drawnCard = player.get("deck").pop();
-  var $cardImage = $("<img>").attr("src",drawnCard.get("image")).addClass("card");
-
-  players.child(me).child("hand").push(drawnCard.toJSON());
+  //remove returns an array, for reasons unknown. why can't i just pop() god dammit
+  var drawnCard = playerManager.deck.remove(playerManager.deck.at(0))[0];
+  var $cardImage = $("<img>").attr("src",drawnCard.image).addClass("card");
 
   $(".my-hand").append($cardImage);
 });
@@ -75,9 +74,13 @@ $('.myModal').on('hidden.bs.modal', function () {
 
 //draft builder tab
 $(".save-deck").click(function(){
-  player.get("mainboard").each(function(card){
-    player.get("deck").push(card);
+  playerManager.mainboard.each(function(card){
+    //fucking Cards bug, man
+    if(card.get("name") === "none"){
+      return;
+    }
+    playerManager.deck.create(card.attributes);
   });
 
-  player.set("deck",player.get("deck").shuffle());
+  playerManager.deck.shuffle();
 });
