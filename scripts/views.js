@@ -209,8 +209,47 @@ var ClientHandView = Backbone.View.extend({
     playerManager.hand.create(playerManager.deck.remove(playerManager.deck.at(0))[0]);
   },
   displayDraw:function(card){
-    var $cardImage = $("<img>").attr("src",card.attributes.image).addClass("card");
+    //should specify the jQuery ui bits elsewhere
+    var $cardImage = $("<img>").attr("src",card.attributes.image).addClass("card").draggable({
+      drag:function(event){
+        card.set({
+          "posX":event.pageX,
+          "posY":event.pageY
+        });
+      },
+      stop:function(){
+        alert("dropped!");
+      }
+    });
 
     this.$el.append($cardImage);
+  }
+});
+
+var OpponentHandView = Backbone.View.extend({
+  el:".opponent-hand",
+  initialize:function(){
+    var self = this;
+    this.collection.on("add",function(card){
+      self.displayDraw(card);
+    });
+
+    this.collection.on("change",function(card){
+      $(".card[cardid='" + card.attributes.id + "']").css({
+        top:screen.height - card.attributes.posY + "px",
+        left:screen.width - card.attributes.posX + "px"
+      });
+    });
+  },
+  displayDraw:function(card){
+    var $cardImage = $("<img>").attr({
+      src:CARD_BACK,
+      cardID:card.attributes.id
+    }).addClass("card");
+
+    this.$el.prepend($cardImage);
+  },
+  moveCard:function(){
+
   }
 });

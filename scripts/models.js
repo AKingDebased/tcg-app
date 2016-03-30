@@ -26,7 +26,9 @@ var Card = Backbone.Model.extend({
       name:"none",
       colors:["none"],
       types:["none"],
-      image:"none"
+      image:"none",
+      posX:"0",
+      posY:"0"
     }
   }
 });

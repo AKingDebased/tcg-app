@@ -1,5 +1,8 @@
 //NAUGHTY GLOBAL VARIABLES
-//models should eventually all by synced to firebase
+
+//constant var for card back location
+var CARD_BACK = "../resources/img/mtg-card-back.jpg"
+
 var gameManager = new GameManager();
 var playerManager;
 var EventHub = _.extend({}, Backbone.Events);
@@ -9,6 +12,7 @@ var logInView = new LogInView();
 var deckBuilderView;
 
 var handView;
+var opponentHandView;
 
 $(".add-to-pool").click(function(){
   var cardsString = $(".pool-builder textarea").val().split("\n");

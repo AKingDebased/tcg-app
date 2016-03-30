@@ -75,10 +75,27 @@ var GameManager = function() {
     };
 
     var PlayerManager = function(){
+      var self = this;
       this.mainboard = new Cards("users/" + firebase.getAuth().uid + "/new-game/mainboard");
       this.sideboard = new Cards("users/" + firebase.getAuth().uid + "/new-game/sideboard");
       this.deck = new Cards("users/" + firebase.getAuth().uid + "/new-game/deck");
       this.hand = new Cards("users/" + firebase.getAuth().uid + "/new-game/hand");
+      this.opponentID;
+      this.opponentHand;
+
+      //establish who the opponent is
+      //i.e. it's the only other UID in this room who is not this client
+      players.once("value",function(snap){
+        snap.forEach(function(childSnap){
+          if(childSnap.key() !== firebase.getAuth().uid){
+            self.opponentID = childSnap.key();
+            //GOD AWFUL place for these things
+            //perhaps use the EventHub instead?
+            self.opponentHand = new Cards("users/" + self.opponentID + "/new-game/hand");
+            opponentHandView = new OpponentHandView({collection:self.opponentHand});
+          }
+        })
+      })
 
       console.log("player set");
     }
