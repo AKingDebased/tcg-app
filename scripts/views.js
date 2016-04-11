@@ -210,15 +210,24 @@ var ClientHandView = Backbone.View.extend({
   },
   displayDraw:function(card){
     //should specify the jQuery ui bits elsewhere
-    var $cardImage = $("<img>").attr("src",card.attributes.image).addClass("card").draggable({
-      drag:function(event){
+    var $cardImage = $("<img>");
+    $cardImage.attr("src",card.attributes.image).addClass("card").draggable({
+      //half card height and with
+      cursorAt:{
+        top:72.5,
+        left:50.7
+      },
+      drag:function(event,ui){
         card.set({
-          "posX":event.pageX,
-          "posY":event.pageY
+          //temporary fix to account for mouse offset on card
+          "xPercent":pxToPercent(event.clientX + 50.7,"x"),
+          "yPercent":pxToPercent(event.clientY + 72.5,"y")
         });
       },
       stop:function(){
-        alert("dropped!");
+        card.set({
+          revealed:true
+        });
       }
     });
 
@@ -236,20 +245,25 @@ var OpponentHandView = Backbone.View.extend({
 
     this.collection.on("change",function(card){
       $(".card[cardid='" + card.attributes.id + "']").css({
-        top:screen.height - card.attributes.posY + "px",
-        left:screen.width - card.attributes.posX + "px"
+        top:window.innerHeight - percentToPx(card.attributes.yPercent,"y") + "px",
+        left:window.innerWidth - percentToPx(card.attributes.xPercent,"x") + "px"
       });
+    });
+
+    //should only trigger off of change in 'revealed'
+    //currently triggers off ANY change
+    this.collection.on("change",function(card){
+      if(card.attributes.revealed){
+        self.$(".card[cardid='" + card.attributes.id + "']").attr("src",card.attributes.image);
+      }
     });
   },
   displayDraw:function(card){
     var $cardImage = $("<img>").attr({
       src:CARD_BACK,
       cardID:card.attributes.id
-    }).addClass("card");
+    }).addClass("card opponent-card");
 
     this.$el.prepend($cardImage);
-  },
-  moveCard:function(){
-
   }
 });

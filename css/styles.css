@@ -63,6 +63,10 @@ body{
   transition: transform .4s;
 }
 
+.opponent-card{
+  position:fixed !important;
+}
+
 /*.card:hover{
   z-index:1;
   transform:scale(2.8,2.8);

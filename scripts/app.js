@@ -14,6 +14,20 @@ var deckBuilderView;
 var handView;
 var opponentHandView;
 
+//make my hand sortable - should be put in a better place
+// $("#sortable").sortable({
+//   drag:function(event){
+//     card.set({
+//       "posX":event.pageX,
+//       "posY":event.pageY
+//     });
+//   },
+//   stop:function(){
+//     console.log("dropped");
+//   },
+//   revert:true
+// });
+
 $(".add-to-pool").click(function(){
   var cardsString = $(".pool-builder textarea").val().split("\n");
   $(".pool-builder textarea").val("");

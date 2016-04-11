@@ -55,29 +55,20 @@ var setActiveTab = function($tab,$pane,state){
   }
 };
 
-// var addPlayer = function(username){
-//   players.child(username).transaction(function(player){
-//     if(player === null){
-//       if(playersCount >= 2){
-//         return;
-//       } else {
-//         var newPlayer = {};
-//
-//         return newPlayer[username] = true;
-//       }
-//     } else {
-//       return player;
-//     }
-//   },function(error,committed,snapshot){
-//     if(error){
-//       alert("shit went wrong");
-//     } else if(committed){
-//       alert(username + " has entered the game!");
-//     } else if(!committed){
-//       alert(username + " is already in the room, or room is full.");
-//       location.reload();
-//     } else {
-//       alert("god help you");
-//     }
-//   });
-// }
+var pxToPercent = function(pos,axis){
+  if(axis === "x"){
+    return (pos / window.innerWidth) * 100;
+  } else if (axis === "y"){
+    return (pos / window.innerHeight) * 100;
+  }
+  return pos;
+}
+
+var percentToPx = function(percent,axis){
+  if(axis === "x"){
+    return (percent / 100) * window.innerWidth;
+  } else if (axis === "y"){
+    return (percent / 100) * window.innerHeight;
+  }
+  return percent;
+}
