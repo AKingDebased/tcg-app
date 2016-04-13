@@ -1,3 +1,6 @@
+//terrible place for this
+var EventHub = _.extend({}, Backbone.Events);
+
 var formatForAJAX = function(card){
   //commas need to be handled
   var regex;

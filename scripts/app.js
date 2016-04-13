@@ -5,7 +5,6 @@ var CARD_BACK = "../resources/img/mtg-card-back.jpg"
 var gameManager = new GameManager();
 var draftManager = new DraftManager();
 var playerManager;
-var EventHub = _.extend({}, Backbone.Events);
 var fetchedCards = [];
 
 var logInView = new LogInView();
@@ -15,7 +14,7 @@ var handView;
 var opponentHandView;
 var draftView;
 
-//make my hand sortable - should be put in a better place
+// make my hand sortable - should be put in a better place
 // $("#sortable").sortable({
 //   drag:function(event){
 //     card.set({

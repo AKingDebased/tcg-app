@@ -66,7 +66,7 @@ var LogInView = Backbone.View.extend({
 var CardPoolItemView = Backbone.View.extend({
   tagName:"li",
   initialize:function(){
-    _.bindAll(this,"render");
+    _.bindAll(this,"render","renderInMainboard","renderInSideboard");
   },
   events:{
     "click":function(){
@@ -91,7 +91,7 @@ var CardPoolColView = Backbone.View.extend({
   tagName:"ul",
   itemViews:[],
   initialize:function(){
-    _.bindAll(this,"render");
+    _.bindAll(this,"renderAdded","addItemView");
     this.listenTo(this.collection,"add",function(card){
       this.addItemView(card);
       this.renderAdded();
@@ -136,6 +136,8 @@ var CardPoolView = Backbone.View.extend({
 var DeckBuilderView = Backbone.View.extend({
   el:".deck-builder-container",
   initialize:function(){
+    _.bindAll(this,"addToMainboard","addToSideboard");
+
     var self = this;
 
     playerManager.sideboard.once("sync",function(){
@@ -196,6 +198,9 @@ var ClientHandView = Backbone.View.extend({
   initialize:function(){
     var self = this;
 
+    //this one tosses an error? for some reason?
+    // _.bindAll(this,"drawCard","displayCard");
+
     EventHub.bind("drawCard",function(){
       self.drawCard();
     });
@@ -238,6 +243,8 @@ var ClientHandView = Backbone.View.extend({
 var OpponentHandView = Backbone.View.extend({
   el:".opponent-hand",
   initialize:function(){
+    _.bindAll(this,"displayDraw");
+
     var self = this;
     this.listenTo(this.collection,"add",function(card){
       self.displayDraw(card);
@@ -271,9 +278,12 @@ var OpponentHandView = Backbone.View.extend({
 
 var DraftCardView = Backbone.View.extend({
   tagName:"img",
+  initialize:function(){
+    _.bindAll(this,"render");
+  },
   events:{
     "click":function(){
-      EventHub.trigger("draftCardClick",this);
+      EventHub.trigger("draftCardClick",this.model);
     }
   },
   render:function(){
@@ -285,18 +295,35 @@ var DraftCardView = Backbone.View.extend({
 var DraftView = Backbone.View.extend({
   el:".draft-container",
   initialize:function(){
-    //event not triggering for some reason?
+    _.bindAll(this,"renderDraftOptions","renderCard",
+    "startDraft","resetPool", "renderDraft","renderPick","renderWaitingScreen");
+
+    this.renderDraftOptions();
+
     this.listenTo(draftManager.currentPack,"add",this.renderCard);
+    EventHub.bind("draftCardClick",this.renderPick);
+    EventHub.bind("yesDrafters",this.startDraft);
+    EventHub.bind("noDrafters",this.renderWaitingScreen);
   },
   events:{
-    "click .start-draft":"startDraft",
+    "click .start-draft":function(){
+      draftManager.addPlayer();
+    },
     "click .reset-pool":"resetPool"
+  },
+  renderDraftOptions:function(){
+    var $draftOptionsDiv = $("<div>").addClass("draft-options");
+    var $glimpseDraftDiv = $("<button>").addClass("btn btn-primary start-draft").text("glimpse draft");
+
+    this.$el.html($draftOptionsDiv.append($glimpseDraftDiv));
   },
   renderCard:function(card){
     var newDraftCardView = new DraftCardView({model:card});
-    this.$el.append(newDraftCardView.render().$el);
+    this.$(".inner-draft-container").append(newDraftCardView.render().$el);
   },
   startDraft:function(){
+    this.$el.html("");
+
     //probably should use an event instead
     draftManager.initializeDraftPool();
     //default pack size to 15
@@ -305,5 +332,19 @@ var DraftView = Backbone.View.extend({
   resetPool:function(){
     draftManager.draftPool = null;
     currentGame.child("draftPool").remove();
+  },
+  renderDraft:function(){
+    var $innerDraftContainer = $("<div>").addClass("inner-draft-container");
+    var $picks = $("<div>").addClass("picks").append("<h1>picks</h1>");
+
+    this.$el.append($innerDraftContainer);
+    this.$el.append($picks);
+  },
+  renderPick:function(card){
+    var $pick = $("<img>").attr("src",card.get("image")).addClass("draft-card");
+    this.$(".picks").append($pick);
+  },
+  renderWaitingScreen:function(){
+    this.$el.html("waiting for other player.");
   }
 });

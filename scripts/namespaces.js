@@ -120,6 +120,26 @@ var GameManager = function() {
           });
         });
       },
+      this.addPlayer = function(){
+        var self = this;
+        currentGame.child("draft").child(firebase.getAuth().uid).set(true);
+
+        //check if there are 2 drafters
+        currentGame.child("draft").on("value",function(snap){
+          if(snap.numChildren() < 2){
+            EventHub.trigger("noDrafters");
+          } else if(snap.numChildren() >= 2){
+            currentGame.child("draft").child("started").transaction(function(currentVal){
+              if(currentVal === null){
+                /*create a pack*/
+              }
+            });
+            EventHub.trigger("yesDrafters");
+          } else {
+            return;
+          }
+        });
+      },
       this.createPack = function(packSize){
         currentGame.child("currentPack").remove();
         this.currentPack = new Cards("new-game/currentPack");

@@ -71,8 +71,21 @@ body{
   height:245px;
 }
 
-.draft-container{
-  padding:0px 240px 50px 240px;
+.inner-draft-container{
+  width:900px;
+  margin:0 auto;
+  text-align:center;
+}
+
+.draft-options{
+  text-align:center;
+  margin:15px 0px;
+}
+
+.picks{
+  width:900px;
+  margin:0 auto;
+  text-align:center;
 }
 
 /* card pool view */
