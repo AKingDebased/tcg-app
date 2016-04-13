@@ -10,7 +10,7 @@
 <body>
   <div class="panel panel-default pool-builder">
     <div class="panel-body">
-      <h3>card pool</h3>
+      <h3>add to pool</h3>
       <textarea name="" id="" cols="30" rows="16"></textarea>
       <button class="btn btn-success add-to-pool center-block">add to pool</button>
       <button class="btn btn-warning pool-view" data-toggle="modal" data-target=".myModal">view card pool</button>
@@ -31,6 +31,7 @@
           <ul class="nav nav-tabs" role="tablist">
             <li role="presentation" class="draft-pool-tab"><a href=".draft-pool-container" aria-controls="home" role="tab" data-toggle="tab">card pool</a></li>
             <li role="presentation" class="deck-builder-tab"><a href=".deck-builder-container" aria-controls="profile" role="tab" data-toggle="tab">deck builder</a></li>
+            <li role="presentation" class="draft-tab"><a href=".draft-container" aria-controls="profile" role="tab" data-toggle="tab">draft</a></li>
           </ul>
         </div>
         <div class="modal-body">
@@ -55,44 +56,48 @@
                 save deck
               </button>
             </div>
+            <div role="tabpanel" class="tab-pane draft-container">
+              <button class="btn btn-primary start-draft">start draft</button>
+              <button class="btn btn-primary reset-pool">reset draft pool</button>
+              <!-- section for drafting -->
+            </div>
           </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
         </div>
       </div>
     </div>
   </div>
-</div>
 
-<script type="template" class="log-in-template">
-<div class="log-in-screen">
-<div class="container">
-<div class="log-in-box center-block">
-<p>email</p>
-<input class="email" type="text">
-<p>password</p>
-<input class="password" type="password">
-<button class="btn btn-primary center-block log-in">log in</button>
-</div>
-</div>
-</div>
-</script>
+  <script type="template" class="log-in-template">
+  <div class="log-in-screen">
+  <div class="container">
+  <div class="log-in-box center-block">
+  <p>email</p>
+  <input class="email" type="text">
+  <p>password</p>
+  <input class="password" type="password">
+  <button class="btn btn-primary center-block log-in">log in</button>
+  </div>
+  </div>
+  </div>
+  </script>
 
-<script src="scripts/lib/jquery.min.js"></script>
-<script src="scripts/lib/jquery-ui.min.js"></script>
-<script src="scripts/lib/underscore.js"></script>
-<script src="scripts/lib/bootstrap.min.js"></script>
-<script src="scripts/lib/backbone.js"></script>
-<script src="https://cdn.firebase.com/js/client/2.4.1/firebase.js"></script>
-<script src="https://cdn.firebase.com/libs/backbonefire/0.5.1/backbonefire.min.js"></script>
-<script src="scripts/firebaseRefs.js"></script>
-<script src="scripts/models.js"></script>
-<script src="scripts/collections.js"></script>
-<script src="scripts/views.js"></script>
-<script src="scripts/card-functions.js"></script>
-<script src="scripts/namespaces.js"></script>
-<script src="scripts/app.js"></script>
+  <script src="scripts/lib/jquery.min.js"></script>
+  <script src="scripts/lib/jquery-ui.min.js"></script>
+  <script src="scripts/lib/underscore.js"></script>
+  <script src="scripts/lib/bootstrap.min.js"></script>
+  <script src="scripts/lib/backbone.js"></script>
+  <script src="https://cdn.firebase.com/js/client/2.4.1/firebase.js"></script>
+  <script src="https://cdn.firebase.com/libs/backbonefire/0.5.1/backbonefire.min.js"></script>
+  <script src="scripts/firebaseRefs.js"></script>
+  <script src="scripts/models.js"></script>
+  <script src="scripts/collections.js"></script>
+  <script src="scripts/views.js"></script>
+  <script src="scripts/card-functions.js"></script>
+  <script src="scripts/namespaces.js"></script>
+  <script src="scripts/app.js"></script>
 
 </body>
 </html>

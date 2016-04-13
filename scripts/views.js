@@ -73,11 +73,11 @@ var CardPoolItemView = Backbone.View.extend({
       EventHub.trigger("clickedPoolItem",this);
     }
   },
-  renderMainboard:function(){
+  renderInMainboard:function(){
     this.$el.html(this.model.get("name")).addClass("mainboard-item");
     return this;
   },
-  renderSideboard:function(){
+  renderInSideboard:function(){
     this.$el.html(this.model.get("name")).addClass("sideboard-item");
     return this;
   },
@@ -168,14 +168,14 @@ var DeckBuilderView = Backbone.View.extend({
       model:card
     })
 
-    this.$(".mainboard").append(cardItemView.renderMainboard().$el);
+    this.$(".mainboard").append(cardItemView.renderInMainboard().$el);
   },
   addToSideboard:function(card){
     var cardItemView = new CardPoolItemView({
       model:card
     })
 
-    this.$(".sideboard").append(cardItemView.renderSideboard().$el);
+    this.$(".sideboard").append(cardItemView.renderInSideboard().$el);
   },
 
   events:{
@@ -200,7 +200,7 @@ var ClientHandView = Backbone.View.extend({
       self.drawCard();
     });
 
-    playerManager.hand.on("add",function(card){
+    this.listenTo(playerManager.hand,"add",function(card){
       self.displayDraw(card);
     })
   },
@@ -239,11 +239,11 @@ var OpponentHandView = Backbone.View.extend({
   el:".opponent-hand",
   initialize:function(){
     var self = this;
-    this.collection.on("add",function(card){
+    this.listenTo(this.collection,"add",function(card){
       self.displayDraw(card);
     });
 
-    this.collection.on("change",function(card){
+    this.listenTo(this.collection,"change",function(card){
       $(".card[cardid='" + card.attributes.id + "']").css({
         top:window.innerHeight - percentToPx(card.attributes.yPercent,"y") + "px",
         left:window.innerWidth - percentToPx(card.attributes.xPercent,"x") + "px"
@@ -252,7 +252,7 @@ var OpponentHandView = Backbone.View.extend({
 
     //should only trigger off of change in 'revealed'
     //currently triggers off ANY change
-    this.collection.on("change",function(card){
+    this.listenTo(this.collection,"change",function(card){
       if(card.attributes.revealed){
         self.$(".card[cardid='" + card.attributes.id + "']").attr("src",card.attributes.image);
       }
@@ -265,5 +265,45 @@ var OpponentHandView = Backbone.View.extend({
     }).addClass("card opponent-card");
 
     this.$el.prepend($cardImage);
+  }
+});
+
+
+var DraftCardView = Backbone.View.extend({
+  tagName:"img",
+  events:{
+    "click":function(){
+      EventHub.trigger("draftCardClick",this);
+    }
+  },
+  render:function(){
+    this.$el.attr("src",this.model.get("image")).addClass("draft-card");
+    return this;
+  }
+});
+
+var DraftView = Backbone.View.extend({
+  el:".draft-container",
+  initialize:function(){
+    //event not triggering for some reason?
+    this.listenTo(draftManager.currentPack,"add",this.renderCard);
+  },
+  events:{
+    "click .start-draft":"startDraft",
+    "click .reset-pool":"resetPool"
+  },
+  renderCard:function(card){
+    var newDraftCardView = new DraftCardView({model:card});
+    this.$el.append(newDraftCardView.render().$el);
+  },
+  startDraft:function(){
+    //probably should use an event instead
+    draftManager.initializeDraftPool();
+    //default pack size to 15
+    draftManager.createPack(15);
+  },
+  resetPool:function(){
+    draftManager.draftPool = null;
+    currentGame.child("draftPool").remove();
   }
 });

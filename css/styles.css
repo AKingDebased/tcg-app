@@ -67,12 +67,13 @@ body{
   position:fixed !important;
 }
 
-/*.card:hover{
-  z-index:1;
-  transform:scale(2.8,2.8);
-  bottom:170px;
-  transition:scale .4s, position .4s;
-}*/
+.draft-card{
+  height:245px;
+}
+
+.draft-container{
+  padding:0px 240px 50px 240px;
+}
 
 /* card pool view */
 .draft-col{

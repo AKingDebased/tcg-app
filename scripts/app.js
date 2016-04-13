@@ -1,9 +1,9 @@
 //NAUGHTY GLOBAL VARIABLES
-
 //constant var for card back location
 var CARD_BACK = "../resources/img/mtg-card-back.jpg"
 
 var gameManager = new GameManager();
+var draftManager = new DraftManager();
 var playerManager;
 var EventHub = _.extend({}, Backbone.Events);
 var fetchedCards = [];
@@ -13,6 +13,7 @@ var deckBuilderView;
 
 var handView;
 var opponentHandView;
+var draftView;
 
 //make my hand sortable - should be put in a better place
 // $("#sortable").sortable({

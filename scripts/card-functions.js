@@ -1,7 +1,3 @@
-//a helper object designed to sync the shared cardpool collection
-//with firebase, contain meta data about the room, and provide
-//global functions
-
 var formatForAJAX = function(card){
   //commas need to be handled
   var regex;

@@ -1,10 +1,13 @@
+//a helper object designed to sync the shared cardpool collection
+//with firebase, contain meta data about the room, and provide
+//global functions
 var GameManager = function() {
   this.firebase = new Firebase("https://tcg-app.firebaseio.com/");
   this.cardPool;
-  this.randomPack = function(packSize){
+  this.randomPack = function(pool,packSize){
     //an embarrassingly terrible algorithm
     var pack = [];
-    var colorKeys = Object.keys(this.cardPool);
+    var colorKeys = Object.keys(pool);
     var randomColorIndex;
     var randomColorKey;
     var randomColor;
@@ -69,6 +72,7 @@ var GameManager = function() {
         playerManager = new PlayerManager();
         deckBuilderView = new DeckBuilderView();
         handView = new ClientHandView();
+        draftView = new DraftView({collection:draftManager.draftPool});
       }
 
       console.log("GM online.");
@@ -99,3 +103,37 @@ var GameManager = function() {
 
       console.log("player set");
     }
+
+    var DraftManager = function(){
+      this.draftPool;
+      this.currentPack = new Cards("new-game/currentPack");
+      this.initializeDraftPool = function(){
+        this.draftPool = new Cards("new-game/draftPool");
+
+        var self = this;
+        _.each(gameManager.cardPool,function(color){
+          color.forEach(function(card){
+            if(card.get("name") === "none"){
+              return;
+            }
+            self.draftPool.create(card.attributes);
+          });
+        });
+      },
+      this.createPack = function(packSize){
+        currentGame.child("currentPack").remove();
+        this.currentPack = new Cards("new-game/currentPack");
+
+        var randomIndex;
+        for(var i = 0; i < packSize; i++){
+          randomIndex = _.random(0,draftManager.draftPool.length - 1)
+
+          //WHY IS THERE ALWAYS A SINGLE DEFAULT MODEL IN THE COLLECTION
+          while(draftManager.draftPool.at(randomIndex).get("name") === "none"){
+            randomIndex = _.random(0,draftManager.draftPool.length - 1);
+          }
+
+          draftManager.currentPack.create(draftManager.draftPool.remove(draftManager.draftPool.at(randomIndex))[0]);
+        }
+      }
+    };
