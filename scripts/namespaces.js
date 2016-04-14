@@ -104,13 +104,14 @@ var GameManager = function() {
       console.log("player set");
     }
 
+    //only works with glimpse draft
+    //needs to be made more generic, to allow for other draft formats
     var DraftManager = function(){
-      this.draftPool;
-      this.currentPack = new Cards("new-game/currentPack");
+      this.currentDraftManager;
+      this.draftPool = new Cards("new-game/draftPool");
       this.initializeDraftPool = function(){
-        this.draftPool = new Cards("new-game/draftPool");
-
         var self = this;
+        console.log("pool is filling up");
         _.each(gameManager.cardPool,function(color){
           color.forEach(function(card){
             if(card.get("name") === "none"){
@@ -121,28 +122,35 @@ var GameManager = function() {
         });
       },
       this.addPlayer = function(){
-        var self = this;
-        currentGame.child("draft").child(firebase.getAuth().uid).set(true);
-
+        currentGame.child("drafters").child(firebase.getAuth().uid).set(true);
         //check if there are 2 drafters
-        currentGame.child("draft").on("value",function(snap){
+        //if there are, and the draft hasn't started, start it
+        //if there are and the draft has started... i dunno, cry, i guess?
+        currentGame.child("drafters").once("value",function(snap){
           if(snap.numChildren() < 2){
-            EventHub.trigger("noDrafters");
+            EventHub.trigger("notEnoughDrafters");
           } else if(snap.numChildren() >= 2){
-            currentGame.child("draft").child("started").transaction(function(currentVal){
+            currentGame.child("drafting").transaction(function(currentVal){
               if(currentVal === null){
-                /*create a pack*/
+                return true
+              } else if(currentVal === true){
+                return;
+              }
+            },function(error,committed,snapshot){
+              if(committed){
+                console.log("draft full, starting now");
+
+              } else {
+                console.log("draft full, in progress");
               }
             });
-            EventHub.trigger("yesDrafters");
           } else {
             return;
           }
         });
       },
       this.createPack = function(packSize){
-        currentGame.child("currentPack").remove();
-        this.currentPack = new Cards("new-game/currentPack");
+        var pack = [];
 
         var randomIndex;
         for(var i = 0; i < packSize; i++){
@@ -153,7 +161,40 @@ var GameManager = function() {
             randomIndex = _.random(0,draftManager.draftPool.length - 1);
           }
 
-          draftManager.currentPack.create(draftManager.draftPool.remove(draftManager.draftPool.at(randomIndex))[0]);
+          pack.push(draftManager.draftPool.remove(draftManager.draftPool.at(randomIndex))[0]);
         }
+
+        return pack;
       }
+
+      currentGame.child("drafting").on("value",function(snapshot){
+        if(snapshot.val() === true){
+          this.currentDraftManager = new GlimpseDraftManager();
+        }
+      });
     };
+
+    var GlimpseDraftManager = function(){
+      this.pick = 0;
+      this.burns = 0;
+      this.remainingPacks = 18;
+      this.myPack = new Cards("new-game/draft-packs/" + firebase.getAuth().uid);
+      this.opponentPack = new Cards("new-game/draft-packs" + playerManager.opponentID);
+      var self = this;
+
+      EventHub.trigger("startDraft",this);
+
+      //if draft pool has not been initialized, initialized it
+      //also creates first pack
+      currentGame.child("draftPool").once("value",function(snapshot){
+        if(!snapshot.exists()){
+          draftManager.initializeDraftPool();
+        }
+
+        _.each(draftManager.createPack(15),function(packCard){
+          self.myPack.create(packCard);
+        });
+      });
+
+      console.log("glimpse draft manager online");
+    }

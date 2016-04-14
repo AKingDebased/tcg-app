@@ -302,38 +302,42 @@ var DraftView = Backbone.View.extend({
 
     this.listenTo(draftManager.currentPack,"add",this.renderCard);
     EventHub.bind("draftCardClick",this.renderPick);
-    EventHub.bind("yesDrafters",this.startDraft);
-    EventHub.bind("noDrafters",this.renderWaitingScreen);
+    EventHub.bind("startDraft",this.startDraft);
+    EventHub.bind("notEnoughDrafters",this.renderWaitingScreen);
   },
   events:{
     "click .start-draft":function(){
       draftManager.addPlayer();
-    },
-    "click .reset-pool":"resetPool"
+    }
   },
   renderDraftOptions:function(){
     var $draftOptionsDiv = $("<div>").addClass("draft-options");
     var $glimpseDraftDiv = $("<button>").addClass("btn btn-primary start-draft").text("glimpse draft");
 
+    //prepend could be problematic if they manage to click multiple times
     this.$el.html($draftOptionsDiv.append($glimpseDraftDiv));
   },
   renderCard:function(card){
     var newDraftCardView = new DraftCardView({model:card});
     this.$(".inner-draft-container").append(newDraftCardView.render().$el);
   },
-  startDraft:function(){
-    this.$el.html("");
+  startDraft:function(draftManager){
+    var self = this;
 
-    //probably should use an event instead
-    draftManager.initializeDraftPool();
-    //default pack size to 15
-    draftManager.createPack(15);
+    //put draft elements on the screen
+    self.renderDraft();
+    //set the current draft mode
+    this.draftManager = draftManager;
+    this.listenTo(this.draftManager.myPack,"add",function(card){
+      self.renderCard(card);
+    })
   },
   resetPool:function(){
     draftManager.draftPool = null;
     currentGame.child("draftPool").remove();
   },
   renderDraft:function(){
+    this.$el.html("");
     var $innerDraftContainer = $("<div>").addClass("inner-draft-container");
     var $picks = $("<div>").addClass("picks").append("<h1>picks</h1>");
 
@@ -345,6 +349,7 @@ var DraftView = Backbone.View.extend({
     this.$(".picks").append($pick);
   },
   renderWaitingScreen:function(){
-    this.$el.html("waiting for other player.");
+    //this as written at 3 am, gimme a break
+    this.$el.html($("<h1>").css("text-align","center").text("waiting for other player"));
   }
 });
