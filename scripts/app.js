@@ -69,7 +69,7 @@ $(".log-fetched").click(function(){
         colors:card.colors,
         types:card.types,
         //deckbrew removed image support, temp fix
-        image:"http://gatherer.wizards.com/Handlers/Image.ashx?multiverseid="+ multiverseId + "&type=card"
+        image:"https://gatherer.wizards.com/Handlers/Image.ashx?multiverseid="+ multiverseId + "&type=card"
       });
     })
   });
