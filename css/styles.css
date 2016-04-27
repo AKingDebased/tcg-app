@@ -67,6 +67,15 @@ body{
   position:fixed !important;
 }
 
+.completion-container{
+  text-align:center;
+}
+
+.restart-draft{
+  display:block;
+  margin:15px auto;
+}
+
 .draft-card{
   height:245px;
 }
@@ -82,7 +91,7 @@ body{
   margin:15px 0px;
 }
 
-.picks{
+.picks, .burns{
   width:900px;
   margin:0 auto;
   text-align:center;

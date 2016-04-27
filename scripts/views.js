@@ -67,6 +67,13 @@ var CardPoolItemView = Backbone.View.extend({
   tagName:"li",
   initialize:function(){
     _.bindAll(this,"render","renderInMainboard","renderInSideboard");
+
+    var self = this;
+    //failsafe, in case a Card model is ever removed
+    //from the mainboard/sideboard without being clicked on
+    this.listenTo(this.model,"remove",function(event){
+      self.close();
+    });
   },
   events:{
     "click":function(){
@@ -140,23 +147,14 @@ var DeckBuilderView = Backbone.View.extend({
 
     var self = this;
 
-    playerManager.sideboard.once("sync",function(){
-      if(playerManager.sideboard.length > 0){
-        playerManager.sideboard.each(function(card){
-          if(card.get("name") === "none"){
-            return;
-          }
-          self.addToSideboard(card);
-        });
-      }
-    });
-
     this.listenTo(playerManager.mainboard,"add",this.addToMainboard);
-    this.listenTo(playerManager.mainboard,"remove",this.addToSideboard);
-    this.listenTo(playerManager.sideBoard,"remove",this.addToMainboard);
+    this.listenTo(playerManager.sideboard,"add",this.addToSideboard);
 
     var self = this;
     EventHub.bind("clickedPoolItem",function(poolItem){
+      //this should be done with listeners on the models
+      //but this method prevents weirdness when mainboard/sideboard
+      //items are removed from other sources, like a draft ending
       if(poolItem.$el.attr("class") === "mainboard-item"){
         playerManager.sideboard.push(playerManager.mainboard.remove(poolItem.model));
       } else if(poolItem.$el.attr("class") === "sideboard-item"){
@@ -166,6 +164,11 @@ var DeckBuilderView = Backbone.View.extend({
     });
   },
   addToMainboard:function(card){
+    //why is there always that default model in the cards collection
+    if(card.get("name") === "none"){
+      return;
+    }
+
     var cardItemView = new CardPoolItemView({
       model:card
     })
@@ -173,6 +176,11 @@ var DeckBuilderView = Backbone.View.extend({
     this.$(".mainboard").append(cardItemView.renderInMainboard().$el);
   },
   addToSideboard:function(card){
+    //why is there always that default model in the cards collection
+    if(card.get("name") === "none"){
+      return;
+    }
+
     var cardItemView = new CardPoolItemView({
       model:card
     })
@@ -283,7 +291,7 @@ var DraftCardView = Backbone.View.extend({
   },
   events:{
     "click":function(){
-      EventHub.trigger("draftCardClick",this.model);
+      EventHub.trigger("draftCardClick",this);
     }
   },
   render:function(){
@@ -296,19 +304,27 @@ var DraftView = Backbone.View.extend({
   el:".draft-container",
   initialize:function(){
     _.bindAll(this,"renderDraftOptions","renderCard",
-    "startDraft","resetPool", "renderDraft","renderPick","renderWaitingScreen");
+    "startDraft", "renderDraft","renderPick","renderWaitingScreen","renderPack","renderBurn","renderDraftComplete");
 
     this.renderDraftOptions();
 
-    this.listenTo(draftManager.currentPack,"add",this.renderCard);
-    EventHub.bind("draftCardClick",this.renderPick);
+    var self = this;
+    EventHub.bind("draftCardClick",function(cardView){
+      //don't remove cards if user is waiting for a new pack
+      if(!self.draftManager.waiting){
+        cardView.remove();
+      }
+    });
+    EventHub.bind("renderPack",this.renderPack);
     EventHub.bind("startDraft",this.startDraft);
     EventHub.bind("notEnoughDrafters",this.renderWaitingScreen);
+    EventHub.bind("draftComplete",this.renderDraftComplete);
   },
   events:{
     "click .start-draft":function(){
       draftManager.addPlayer();
-    }
+    },
+    "click .restart-draft":"renderDraftOptions"
   },
   renderDraftOptions:function(){
     var $draftOptionsDiv = $("<div>").addClass("draft-options");
@@ -328,28 +344,56 @@ var DraftView = Backbone.View.extend({
     self.renderDraft();
     //set the current draft mode
     this.draftManager = draftManager;
-    this.listenTo(this.draftManager.myPack,"add",function(card){
-      self.renderCard(card);
+    this.listenTo(this.draftManager.draftPicks,"add",function(card){
+      self.renderPick(card);
+    });
+    this.listenTo(this.draftManager.draftBurns,"add",function(card){
+      self.renderBurn(card);
     })
-  },
-  resetPool:function(){
-    draftManager.draftPool = null;
-    currentGame.child("draftPool").remove();
   },
   renderDraft:function(){
     this.$el.html("");
     var $innerDraftContainer = $("<div>").addClass("inner-draft-container");
     var $picks = $("<div>").addClass("picks").append("<h1>picks</h1>");
+    var $burns = $("<div>").addClass("burns").append("<h1>burns</h1>");
 
     this.$el.append($innerDraftContainer);
     this.$el.append($picks);
+    this.$el.append($burns);
   },
   renderPick:function(card){
+    //maybe consolidate this and renderBurn?
     var $pick = $("<img>").attr("src",card.get("image")).addClass("draft-card");
     this.$(".picks").append($pick);
   },
+  renderBurn:function(card){
+    var $burn = $("<img>").attr("src",card.get("image")).addClass("draft-card");
+    this.$(".burns").append($burn);
+  },
   renderWaitingScreen:function(){
-    //this as written at 3 am, gimme a break
+    //this was written at 3 am, gimme a break
     this.$el.html($("<h1>").css("text-align","center").text("waiting for other player"));
+  },
+  renderPack:function(pack){
+    var self = this;
+
+    this.$(".inner-draft-container").html("");
+
+    pack.each(function(card){
+      //that one default card, fucking it all up again
+      if(card.get("name") === "none"){
+        return;
+      }
+      self.renderCard(card);
+    });
+  },
+  renderDraftComplete:function(){
+    //maybe put all these classes in the css file
+    var $endHeader = $("<h1>").text("the draft has ended.").addClass("center-block");
+    var $endSubHeader = $("<h3>").text("all your picks have been transferred to your mainboard.").addClass("center-block");
+    var $restartButton = $("<button>").addClass("btn btn-primary restart-draft").text("draft again");
+    var $completionContainer = $("<div>").addClass("completion-container").append($endHeader,$endSubHeader,$restartButton);
+
+    this.$el.html($completionContainer);
   }
 });

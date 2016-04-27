@@ -1,3 +1,27 @@
+//utility function for debugging
+var clearDraft = function(){
+  currentGame.child("draft-packs").remove();
+  currentGame.child("done-picking").remove();
+  currentGame.child("drafters").remove();
+  currentGame.child("drafting").remove();
+  currentGame.child("draftPool").remove();
+  currentGame.child("draft-picks").remove();
+  currentGame.child("draft-burns").remove();
+  currentGame.child("packs-initialized").remove();
+}
+
+//debugging
+var dani = function(){
+  $(".email").val("dani.galipeau@gmail.com");
+  $(".password").val("dani");
+}
+
+//debugging
+var me = function(){
+  $(".email").val("akingdebased@gmail.com");
+  $(".password").val("TheSunSails15");
+}
+
 //terrible place for this
 var EventHub = _.extend({}, Backbone.Events);
 

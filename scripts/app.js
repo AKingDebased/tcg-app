@@ -52,15 +52,24 @@ $(".builder-view").click(function(){
 
 $(".log-fetched").click(function(){
   fetchedCards = sortByColor(fetchedCards);
+  var multiverseId;
 
   // populate cards collections with color sorted card models
   _.each(fetchedCards,function(cards,colorName){
     _.each(cards,function(card){
+      //occasionally, particular card editions do not come with art
+      //thus, this loop
+      _.each(card.editions,function(edition){
+        if(edition["multiverse_id"] !== 0){
+          multiverseId = edition["multiverse_id"];
+        }
+      });
       gameManager.cardPool[colorName].create({
         name:card.name,
         colors:card.colors,
         types:card.types,
-        image:card.editions[0].image_url
+        //deckbrew removed image support, temp fix
+        image:"http://gatherer.wizards.com/Handlers/Image.ashx?multiverseid="+ multiverseId + "&type=card"
       });
     })
   });
