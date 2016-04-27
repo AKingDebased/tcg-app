@@ -1,3 +1,3 @@
 # tcg player
 
-* find the current working version a tcg-app.firebaseapp.com
+* find the current working version right [here](tcg-app.firebaseapp.com)
