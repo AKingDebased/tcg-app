@@ -108,7 +108,7 @@ var GameManager = function() {
     //needs to be made more generic, to allow for other draft formats
     var DraftManager = function(){
       this.currentDraftManager;
-      this.draftPool = new Cards("new-game/draftPool");
+      this.draftPool = new Cards("new-game/current-draft/draftPool");
       this.initializeDraftPool = function(){
         var self = this;
         _.each(gameManager.cardPool,function(color){
@@ -121,15 +121,15 @@ var GameManager = function() {
         });
       },
       this.addPlayer = function(){
-        currentGame.child("drafters").child(firebase.getAuth().uid).set(true);
+        currentGame.child("current-draft/drafters").child(firebase.getAuth().uid).set(true);
         //check if there are 2 drafters
         //if there are, and the draft hasn't started, start it
         //if there are and the draft has started... i dunno, cry, i guess?
-        currentGame.child("drafters").once("value",function(snap){
+        currentGame.child("current-draft/drafters").once("value",function(snap){
           if(snap.numChildren() < 2){
             EventHub.trigger("notEnoughDrafters");
           } else if(snap.numChildren() >= 2){
-            currentGame.child("drafting").transaction(function(currentVal){
+            currentGame.child("current-draft/drafting").transaction(function(currentVal){
               if(currentVal === null){
                 return true
               } else if(currentVal === true){
@@ -163,7 +163,7 @@ var GameManager = function() {
         return pack;
       }
 
-      currentGame.child("drafting").on("value",function(snapshot){
+      currentGame.child("current-draft/drafting").on("value",function(snapshot){
         if(snapshot.val() === true){
           self.currentDraftManager = new GlimpseDraftManager();
         }
@@ -175,39 +175,35 @@ var GameManager = function() {
       this.picked = false;
       this.waiting = false;
       this.burns = 0;
-      this.remainingPacks = 1;
+      this.remainingPacks = 9;
       this.draftNumber = 0;
       this.numOfDrafters = 2;
-      this.draftPicks = new Cards("new-game/draft-picks/" + firebase.getAuth().uid);
-      this.draftBurns = new Cards("new-game/draft-burns/" + firebase.getAuth().uid);
+      this.draftPicks = new Cards("new-game/current-draft/draft-picks/" + firebase.getAuth().uid);
+      this.draftBurns = new Cards("new-game/current-draft/draft-burns/" + firebase.getAuth().uid);
       this.draftPacks = [];
       this.endDraft = function(){
         //clear the player's mainboard and sideboard
-        if(playerManager.mainboard.length >= 1){
-          console.log("removing mainboard");
-          firebase.child("users/" + firebase.getAuth().uid + "/new-game/mainboard").remove();
-        }
 
-        if(playerManager.sideboard.length >= 1){
-          console.log("removing sideboard");
-          firebase.child("users/" + firebase.getAuth().uid + "/new-game/sideboard").remove();
-        }
+        console.log("removing mainboard, sideboard, hand, and deck");
+        firebase.child("users/" + firebase.getAuth().uid + "/new-game").remove();
 
         //add all draft picks to the player's mainboard
         this.draftPicks.each(function(card){
           playerManager.mainboard.create(card.attributes);
         });
 
-        //clears all firebase draft nodes and places all
-        //picks in the player's mainboard
-        // currentGame.child("draft-packs").remove();
-        // currentGame.child("done-picking").remove();
-        // currentGame.child("drafters").remove();
-        // currentGame.child("drafting").remove();
-        // currentGame.child("draftPool").remove();
-        // currentGame.child("draft-picks").remove();
-        // currentGame.child("draft-burns").remove();
-        // currentGame.child("packs-initialized").remove();
+        currentGame.child("current-draft/packs-initialized").off("value");
+
+        //in order to prevent two clients trying to delete the same node,
+        //arbitrarily allow a particular client to clear the draft nodes
+        if(this.draftNumber === this.numOfDrafters - 1 ){
+          console.log("i am the chosen one",this.draftNumber)
+          currentGame.child("current-draft").once("value",function(snapshot){
+            if(snapshot.exists()){
+              currentGame.child("current-draft").remove();
+            }
+          });
+        }
       }
       this.increaseDraftNumber = function(){
         if(++this.draftNumber >= this.numOfDrafters){
@@ -221,13 +217,13 @@ var GameManager = function() {
       //thus, all clients technically have access to all packs
       //currently in the draft
       for(var i = 0; i < this.numOfDrafters; i++){
-        this.draftPacks.push(new Cards("new-game/draft-packs/" + i));
+        this.draftPacks.push(new Cards("new-game/current-draft/draft-packs/" + i));
       }
 
       //if draft pool has not been initialized, initialize it
       //other players' packs won't be initialized until the draft pool
       //is initialized
-      currentGame.child("draftPool").once("value",function(snapshot){
+      currentGame.child("current-draft/draftPool").once("value",function(snapshot){
         if(!snapshot.exists()){
           draftManager.initializeDraftPool();
         }
@@ -235,7 +231,7 @@ var GameManager = function() {
 
       //assign each player a draft number
       //should check if the user is present at all
-      currentGame.child("drafters").once("value",function(snapshot){
+      currentGame.child("current-draft/drafters").once("value",function(snapshot){
         snapshot.forEach(function(drafter){
           if(drafter.key() === firebase.getAuth().uid){
             return true;
@@ -247,7 +243,7 @@ var GameManager = function() {
       //everyone creates their pack in draft number order
       //this will (hopefully) prevent weird network issues that cause
       //duplicate cards across draft packs
-      currentGame.child("packs-initialized").on("value",function(snapshot){
+      currentGame.child("current-draft/packs-initialized").on("value",function(snapshot){
         if(!self.myPackInitialized){
           console.log("my draft number: ",self.draftNumber,"drafter's turn",snapshot.numChildren());
           if(snapshot.val() === null & self.draftNumber === 0){
@@ -258,7 +254,7 @@ var GameManager = function() {
             });
             EventHub.trigger("renderPack",self.draftPacks[self.draftNumber]);
 
-            currentGame.child("packs-initialized").child(firebase.getAuth().uid).set(true);
+            currentGame.child("current-draft/packs-initialized").child(firebase.getAuth().uid).set(true);
             self.remainingPacks--;
             console.log("i am first and i deserve this");
           } else if(snapshot.numChildren() === self.draftNumber){
@@ -271,7 +267,7 @@ var GameManager = function() {
             EventHub.trigger("renderPack",self.draftPacks[self.draftNumber]);
 
             console.log("not first, setting up my pack",self.draftNumber);
-            currentGame.child("packs-initialized").child(firebase.getAuth().uid).set(true);
+            currentGame.child("current-draft/packs-initialized").child(firebase.getAuth().uid).set(true);
             self.remainingPacks--;
           }
         }
@@ -297,7 +293,7 @@ var GameManager = function() {
             self.picked = false;
             self.burns = 0;
 
-            currentGame.child("done-picking").child(firebase.getAuth().uid).set(true);
+            currentGame.child("current-draft/done-picking").child(firebase.getAuth().uid).set(true);
           }
         }
       });
@@ -305,9 +301,9 @@ var GameManager = function() {
       //detect when all drafters have made their picks
       //once they have, increment everyone's draft number
       //then display the pack associated with that draft number
-      currentGame.child("done-picking").on("value",function(snapshot){
+      currentGame.child("current-draft/done-picking").on("value",function(snapshot){
         if(snapshot.numChildren() === self.numOfDrafters){
-          currentGame.child("done-picking").remove();
+          currentGame.child("current-draft/done-picking").remove();
           self.increaseDraftNumber();
           EventHub.trigger("renderPack",self.draftPacks[self.draftNumber]);
           self.waiting = false;
@@ -325,12 +321,12 @@ var GameManager = function() {
               return;
             }
 
-            currentGame.child("packs-initialized").once("value",function(snapshot){
+            currentGame.child("current-draft/packs-initialized").once("value",function(snapshot){
               //ensures that only one client is removing the packs-initialized node
 
               //draftNumber is 0 indexed
               if(self.draftNumber === snapshot.numChildren() - 1){
-                currentGame.child("packs-initialized").remove();
+                currentGame.child("current-draft/packs-initialized").remove();
               }
             });
             console.log("remaining packs",self.remainingPacks);

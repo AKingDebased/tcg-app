@@ -186,18 +186,6 @@ var DeckBuilderView = Backbone.View.extend({
     })
 
     this.$(".sideboard").append(cardItemView.renderInSideboard().$el);
-  },
-
-  events:{
-    "click .randMainboard":function(){
-      var randPack = gameManager.randomPack(5);
-
-      //backbonefire 'add' method only accepts
-      //plain objects as arguments, not models
-      _.each(randPack,function(card){
-        playerManager.mainboard.create(card);
-      });
-    }
   }
 });
 
