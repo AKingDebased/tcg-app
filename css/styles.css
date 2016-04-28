@@ -71,6 +71,15 @@ body{
   text-align:center;
 }
 
+.popover{
+  max-width:380px;
+  text-align:center;
+}
+
+.popover img{
+  height:415px;
+}
+
 .restart-draft{
   display:block;
   margin:15px auto;

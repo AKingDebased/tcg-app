@@ -283,7 +283,11 @@ var DraftCardView = Backbone.View.extend({
     }
   },
   render:function(){
-    this.$el.attr("src",this.model.get("image")).addClass("draft-card");
+    //gives all draft cards a popover
+    this.$el.attr({
+      "src":this.model.get("image"),
+      "data-toggle":"popover"
+    }).addClass("draft-card");
     return this;
   }
 });
