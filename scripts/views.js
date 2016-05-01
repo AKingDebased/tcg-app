@@ -285,7 +285,7 @@ var DraftCardView = Backbone.View.extend({
   render:function(){
     //gives all draft cards a popover
     this.$el.attr({
-      "src":this.model.get("image"),
+      "src":this.model.get("image").replace('ps:','p:'),
       "data-toggle":"popover"
     }).addClass("draft-card");
     return this;
@@ -296,7 +296,8 @@ var DraftView = Backbone.View.extend({
   el:".draft-container",
   initialize:function(){
     _.bindAll(this,"renderDraftOptions","renderCard",
-    "startDraft", "renderDraft","renderPick","renderWaitingScreen","renderPack","renderBurn","renderDraftComplete");
+    "startDraft", "renderDraft","renderPick","renderWaitingScreen",
+    "renderPack","renderBurn","renderDraftComplete","hidePopover");
 
     this.renderDraftOptions();
 
@@ -311,6 +312,7 @@ var DraftView = Backbone.View.extend({
     EventHub.bind("startDraft",this.startDraft);
     EventHub.bind("notEnoughDrafters",this.renderWaitingScreen);
     EventHub.bind("draftComplete",this.renderDraftComplete);
+    EventHub.bind("hidePopover",this.hidePopover);
   },
   events:{
     "click .start-draft":function(){
@@ -367,6 +369,7 @@ var DraftView = Backbone.View.extend({
     this.$el.html($("<h1>").css("text-align","center").text("waiting for other player"));
   },
   renderPack:function(pack){
+    console.log("render pack",pack);
     var self = this;
 
     this.$(".inner-draft-container").html("");
@@ -387,5 +390,9 @@ var DraftView = Backbone.View.extend({
     var $completionContainer = $("<div>").addClass("completion-container").append($endHeader,$endSubHeader,$restartButton);
 
     this.$el.html($completionContainer);
+  },
+  hidePopover:function(){
+    console.log("hiding popovers");
+    this.$(".inner-draft-container").find(".popover").hide();
   }
 });

@@ -148,6 +148,8 @@ var GameManager = function() {
         });
       },
       this.createPack = function(packSize){
+        console.log("creating a pack");
+        var count = 0;
         var pack = [];
 
         var randomIndex;
@@ -159,6 +161,7 @@ var GameManager = function() {
             randomIndex = _.random(0,draftManager.draftPool.length - 1);
           }
           pack.push(draftManager.draftPool.remove(draftManager.draftPool.at(randomIndex))[0]);
+          count++;
         }
         return pack;
       }
@@ -175,7 +178,7 @@ var GameManager = function() {
       this.picked = false;
       this.waiting = false;
       this.burns = 0;
-      this.remainingPacks = 9;
+      this.remainingPacks = 3;
       this.draftNumber = 0;
       this.numOfDrafters = 2;
       this.draftPicks = new Cards("new-game/current-draft/draft-picks/" + firebase.getAuth().uid);
@@ -184,7 +187,6 @@ var GameManager = function() {
       this.endDraft = function(){
         //clear the player's mainboard and sideboard
 
-        console.log("removing mainboard, sideboard, hand, and deck");
         firebase.child("users/" + firebase.getAuth().uid + "/new-game").remove();
 
         //add all draft picks to the player's mainboard
@@ -196,7 +198,7 @@ var GameManager = function() {
 
         //in order to prevent two clients trying to delete the same node,
         //arbitrarily allow a particular client to clear the draft nodes
-        if(this.draftNumber === this.numOfDrafters - 1 ){
+        if(this.draftNumber === this.numOfDrafters - 1){
           console.log("i am the chosen one",this.draftNumber)
           currentGame.child("current-draft").once("value",function(snapshot){
             if(snapshot.exists()){
@@ -243,44 +245,44 @@ var GameManager = function() {
       //everyone creates their pack in draft number order
       //this will (hopefully) prevent weird network issues that cause
       //duplicate cards across draft packs
+
+      //draft number 0 is creating too many cards
       currentGame.child("current-draft/packs-initialized").on("value",function(snapshot){
-        if(!self.myPackInitialized){
-          console.log("my draft number: ",self.draftNumber,"drafter's turn",snapshot.numChildren());
-          if(snapshot.val() === null & self.draftNumber === 0){
-            self.myPackInitialized = true;
+        if(snapshot.val() === null & self.draftNumber === 0){
+          console.log("nobody has their pack yet, id",self.draftNumber);
 
-            _.each(draftManager.createPack(15),function(packCard){
-              self.draftPacks[self.draftNumber].create(packCard);
-            });
-            EventHub.trigger("renderPack",self.draftPacks[self.draftNumber]);
 
-            currentGame.child("current-draft/packs-initialized").child(firebase.getAuth().uid).set(true);
-            self.remainingPacks--;
-            console.log("i am first and i deserve this");
-          } else if(snapshot.numChildren() === self.draftNumber){
-            self.myPackInitialized = true;
+          _.each(draftManager.createPack(15),function(packCard){
+            self.draftPacks[self.draftNumber].create(packCard);
+          });
 
-            _.each(draftManager.createPack(15),function(packCard){
-              self.draftPacks[self.draftNumber].create(packCard);
-            });
+          EventHub.trigger("renderPack",self.draftPacks[self.draftNumber]);
 
-            EventHub.trigger("renderPack",self.draftPacks[self.draftNumber]);
+          currentGame.child("current-draft/packs-initialized").child(firebase.getAuth().uid).set(true);
+          self.remainingPacks--;
+        } else if(snapshot.numChildren() === self.draftNumber){
+          console.log();
 
-            console.log("not first, setting up my pack",self.draftNumber);
-            currentGame.child("current-draft/packs-initialized").child(firebase.getAuth().uid).set(true);
-            self.remainingPacks--;
-          }
+
+          _.each(draftManager.createPack(15),function(packCard){
+            self.draftPacks[self.draftNumber].create(packCard);
+          });
+
+          EventHub.trigger("renderPack",self.draftPacks[self.draftNumber]);
+
+          currentGame.child("current-draft/packs-initialized").child(firebase.getAuth().uid).set(true);
+          self.remainingPacks--;
         }
       });
 
       EventHub.trigger("startDraft",this);
 
-      //behavior for a draft card being clicked
       EventHub.bind("draftCardClick",function(cardView){
         if(!self.waiting){
+          EventHub.trigger("hidePopover");
           if(!self.picked){
-            self.picked = true;
             self.draftPicks.create(cardView.model);
+            self.picked = true;
             self.draftPacks[self.draftNumber].remove(cardView.model);
           } else {
             self.burns++;
@@ -311,9 +313,9 @@ var GameManager = function() {
           //if the packs are empty, generate new ones
           //once again, default card present in collection
           if(self.draftPacks[self.draftNumber].length <= 1){
-            console.log("pack switch");
             self.myPackInitialized = false;
 
+            //end draft condition
             if(self.remainingPacks <= 0){
               console.log("we're done here")
               EventHub.trigger("draftComplete");

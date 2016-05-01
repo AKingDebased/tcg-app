@@ -26,20 +26,26 @@ var me = function(){
 var EventHub = _.extend({}, Backbone.Events);
 
 var formatForAJAX = function(card){
-  //commas need to be handled
+  card = card.toLowerCase();
   var regex;
+
   if(card.includes("'")){
     //deckbrew replaces apostrophes with empty string
     regex = new RegExp("'", "g");
-    return card.replace(regex, '').toLowerCase().split(" ").join("-"); //HOW DOES REGEX WORK SEND HELP
+    card = card.replace(regex, ''); //HOW DOES REGEX WORK SEND HELP
   };
 
   if(card.includes(",")){
     regex = new RegExp(",","g");
-    return card.replace(regex , '').toLowerCase().split(" ").join("-"); //REGEX CONTINUES TO MYSTIFY LOCAL PROGRAMMER
+    card = card.replace(regex, ''); //REGEX CONTINUES TO MYSTIFY LOCAL PROGRAMMER
   }
 
-  return card.toLowerCase().split(" ").join("-");
+  if(card.includes("aet")){
+    regex = new RegExp("aet","g");
+    card = card.replace(regex, encodeURI("æt")); //regex, an unsolved mystery
+  }
+
+  return card.split(" ").join("-");
 };
 
 var sortByColor = function(cardPool){
