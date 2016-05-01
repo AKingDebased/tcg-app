@@ -6,7 +6,6 @@ var LENGTH_OFFSET = 1;
 var gameManager = new GameManager();
 var draftManager = new DraftManager();
 var playerManager;
-var fetchedCards = [];
 
 var logInView = new LogInView();
 var deckBuilderView;
@@ -25,17 +24,44 @@ $('body').popover({
   html:true
 });
 
-$(".add-to-pool").click(function(){
-  var cardsString = $(".pool-builder textarea").val().split("\n");
+$(".upload-cards").click(function(){
+  var cardNames = $(".pool-builder textarea").val().split("\n");
   $(".pool-builder textarea").val("");
 
-  _.each(cardsString,function(currentCard){
-    //asynchronicity needs to be handled. maybe use a promise?
-    $.get("https://api.deckbrew.com/mtg/cards/" + formatForAJAX(currentCard),function(fetchedCard){
-      fetchedCards.push(fetchedCard);
+  var uploadCardsPromise = new Promise(function(resolve,reject){
+    var fetchedCards = [];
+
+    _.each(cardNames,function(currentCard){
+      $.get("https://api.deckbrew.com/mtg/cards/" + formatForAJAX(currentCard),function(fetchedCard){
+        fetchedCards.push(fetchedCard);
+
+        if(fetchedCards.length === cardNames.length){
+          console.log("resolving")
+          resolve(fetchedCards);
+        }
+      });
+    });
+  }).then(function(fetchedCards){
+    console.log("populating cards");
+    fetchedCards = sortByColor(fetchedCards);
+    var multiverseId;
+    var validEdition;
+
+    // populate cards collections with color sorted card models
+    _.each(fetchedCards,function(cards,colorName){
+      _.each(cards,function(card){
+        validEdition = _.find(card.editions,function(edition){
+          return edition.multiverse_id !== 0;
+        })
+        gameManager.cardPool[colorName].create({
+          name:card.name,
+          colors:card.colors,
+          types:card.types,
+          image:validEdition.image_url
+        });
+      })
     });
   });
-  //need a promise here to load sorted cards to DOM
 });
 
 //card pool entry menu

@@ -392,7 +392,6 @@ var DraftView = Backbone.View.extend({
     this.$el.html($completionContainer);
   },
   hidePopover:function(){
-    console.log("hiding popovers");
-    this.$(".inner-draft-container").find(".popover").hide();
+    this.$(".inner-draft-container").find(".popover").remove();
   }
 });
