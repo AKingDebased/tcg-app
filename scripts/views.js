@@ -304,7 +304,8 @@ var DraftView = Backbone.View.extend({
     var self = this;
     EventHub.bind("draftCardClick",function(cardView){
       //don't remove cards if user is waiting for a new pack
-      if(!self.draftManager.waiting){
+      //i don't like these references to draft manager. should use an event instead.
+      if(!self.draftManager.waiting && self.draftManager.playersPresent){
         cardView.remove();
       }
     });
@@ -316,6 +317,9 @@ var DraftView = Backbone.View.extend({
   },
   events:{
     "click .start-draft":function(){
+      //this doesn't feel quite right does it
+      draftManager = new DraftManager();
+      this.collection = draftManager.draftPool;
       draftManager.addPlayer();
     },
     "click .restart-draft":"renderDraftOptions"
@@ -369,7 +373,6 @@ var DraftView = Backbone.View.extend({
     this.$el.html($("<h1>").css("text-align","center").text("waiting for other player"));
   },
   renderPack:function(pack){
-    console.log("render pack",pack);
     var self = this;
 
     this.$(".inner-draft-container").html("");

@@ -4,7 +4,6 @@ var CARD_BACK = "../resources/img/mtg-card-back.jpg"
 var LENGTH_OFFSET = 1;
 
 var gameManager = new GameManager();
-var draftManager = new DraftManager();
 var playerManager;
 
 var logInView = new LogInView();
@@ -24,10 +23,15 @@ $('body').popover({
   html:true
 });
 
+//if a player disconnects, remove them from the current draft
+
 $(".upload-cards").click(function(){
   var cardNames = $(".pool-builder textarea").val().split("\n");
   $(".pool-builder textarea").val("");
 
+  //promise that fetches cards from deckbrew, then
+  //fills the global cardPool collection with card models,
+  //sorted by color
   var uploadCardsPromise = new Promise(function(resolve,reject){
     var fetchedCards = [];
 
