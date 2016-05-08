@@ -3,69 +3,27 @@
 <head>
   <meta charset="utf-8">
   <title></title>
-  <link rel="stylesheet" href="css/cosmo-bootstrap.css">
+  <link rel="stylesheet" href="css/sandstone-bootstrap.css">
   <link rel="stylesheet" href="css/animate.css">
   <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
-  
-  <div class="panel panel-default pool-builder">
-    <div class="panel-body">
-      <h3>add to pool</h3>
-      <textarea name="" id="" cols="30" rows="16"></textarea>
-      <button class="btn btn-success upload-cards center-block">upload cards</button>
-      <button class="btn btn-warning pool-view" data-toggle="modal" data-target=".myModal">view card pool</button>
-      <button class="btn btn-warning builder-view" data-toggle="modal" data-target=".myModal">view deck builder</button>
-    </div>
-  </div>
+  <div class="container">
+    <div class="home">
+      <h1>mtg draft simulator</h1>
+      <h2>choose your format</h2>
 
-  <div class="hand opponent-hand center-block"></div>
-  <div class="hand my-hand center-block" id="sortable">
-  </div>
-  <div class="deck"><img src="resources/img/mtg-card-back.jpg" alt=""></div>
-  <div data-toggle="tab" class="modal fade myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-    <div class="modal-dialog pool-builder-modal" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-          <ul class="nav nav-tabs" role="tablist">
-            <li role="presentation" class="draft-pool-tab"><a href=".draft-pool-container" aria-controls="home" role="tab" data-toggle="tab">card pool</a></li>
-            <li role="presentation" class="deck-builder-tab"><a href=".deck-builder-container" aria-controls="profile" role="tab" data-toggle="tab">deck builder</a></li>
-            <li role="presentation" class="draft-tab"><a href=".draft-container" aria-controls="profile" role="tab" data-toggle="tab">draft</a></li>
-          </ul>
-        </div>
-        <div class="modal-body">
-          <div class="tab-content">
-            <div role="tabpanel" class="tab-pane draft-pool-container">
-              <div class="draft-pool">
-                <!-- not hugging the top of their div -->
-
-              </div>
-            </div>
-            <div role="tabpanel" class="tab-pane deck-builder-container">
-              <div class="mainboard">
-                <h3>main board</h3>
-              </div>
-              <div class="sideboard">
-                <h3>side board</h3>
-              </div>
-              <button class="btn btn-primary save-deck">
-                save deck
-              </button>
-            </div>
-            <div role="tabpanel" class="tab-pane draft-container">
-              <!-- section for drafting -->
-            </div>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-          </div>
-        </div>
+      <div class="draft-choice">
+        <button class="btn btn-default start-glimpse">glimpse draft</button>
+        <button class="btn btn-default start-grid">grid draft</button>
+        <button class="btn btn-default start-winston">winston draft</button>
+        <button class="btn btn-default start-winchester">winchester draft</button>
       </div>
     </div>
   </div>
 
-  <script type="template" class="log-in-template">
+
+  <!-- <script type="template" class="log-in-template">
   <div class="log-in-screen">
   <div class="container">
   <div class="log-in-box center-block">
@@ -74,25 +32,25 @@
   <p>password</p>
   <input class="password" type="password">
   <button class="btn btn-primary center-block log-in">log in</button>
-  </div>
-  </div>
-  </div>
-  </script>
+</div>
+</div>
+</div>
+</script> -->
 
-  <script src="scripts/lib/jquery.min.js"></script>
-  <script src="scripts/lib/jquery-ui.min.js"></script>
-  <script src="scripts/lib/underscore.js"></script>
-  <script src="scripts/lib/bootstrap.min.js"></script>
-  <script src="scripts/lib/backbone.js"></script>
-  <script src="https://cdn.firebase.com/js/client/2.4.1/firebase.js"></script>
-  <script src="https://cdn.firebase.com/libs/backbonefire/0.5.1/backbonefire.min.js"></script>
-  <script src="scripts/firebaseRefs.js"></script>
-  <script src="scripts/models.js"></script>
-  <script src="scripts/collections.js"></script>
-  <script src="scripts/views.js"></script>
-  <script src="scripts/card-functions.js"></script>
-  <script src="scripts/namespaces.js"></script>
-  <script src="scripts/app.js"></script>
+<script src="scripts/lib/jquery.min.js"></script>
+<!-- <script src="scripts/lib/jquery-ui.min.js"></script> -->
+<script src="scripts/lib/underscore.js"></script>
+<script src="scripts/lib/bootstrap.min.js"></script>
+<script src="scripts/lib/backbone.js"></script>
+<script src="https://cdn.firebase.com/js/client/2.4.1/firebase.js"></script>
+<script src="https://cdn.firebase.com/libs/backbonefire/0.5.1/backbonefire.min.js"></script>
+<script src="scripts/firebaseRefs.js"></script>
+<script src="scripts/models.js"></script>
+<script src="scripts/collections.js"></script>
+<script src="scripts/views.js"></script>
+<script src="scripts/card-functions.js"></script>
+<script src="scripts/namespaces.js"></script>
+<script src="scripts/app.js"></script>
 
 </body>
 </html>

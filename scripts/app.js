@@ -3,10 +3,10 @@
 var CARD_BACK = "../resources/img/mtg-card-back.jpg"
 var LENGTH_OFFSET = 1;
 
+var homeView = new HomeView();
 var gameManager = new GameManager();
 var playerManager;
 
-var logInView = new LogInView();
 var deckBuilderView;
 
 var handView;

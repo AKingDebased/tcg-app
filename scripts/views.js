@@ -7,61 +7,61 @@ Backbone.View.prototype.close = function(){
   }
 };
 
-var LogInView = Backbone.View.extend({
-  el: "body",
-  template: _.template($(".log-in-template").html()),
-  events:{
-    "click .log-in":"logIn",
-    "keydown .password":"logIn"
-  },
-  logIn:function(event){
+// var LogInView = Backbone.View.extend({
+//   el: "body",
+//   template: _.template($(".log-in-template").html()),
+//   events:{
+//     "click .log-in":"logIn",
+//     "keydown .password":"logIn"
+//   },
+//   logIn:function(event){
     //only log in if button is clicked or enter key is pressed
-    if(!(event.which === 1 || event.which === 13)){
-      return;
-    }
-
-    var $email = $(".email").val();
-    var $password = $(".password").val();
-    var userInfo = {};
-    var self = this;
-
-    firebase.createUser({
-      email: $email,
-      password: $password
-    }, function(error, userData) {
-      if (error) {
+    // if(!(event.which === 1 || event.which === 13)){
+    //   return;
+    // }
+    //
+    // var $email = $(".email").val();
+    // var $password = $(".password").val();
+    // var userInfo = {};
+    // var self = this;
+    //
+    // firebase.createUser({
+    //   email: $email,
+    //   password: $password
+    // }, function(error, userData) {
+    //   if (error) {
         //do error shit
-
-      } else {
-        console.log("Successfully created user account with uid:", userData.uid);
-      }
-    });
-
-    firebase.authWithPassword({
-      email    : $email,
-      password : $password
-    }, function(error, authData) {
-      if(error){
-        console.log("error logging in: " + error);
-      } else {
-        self.fadeOut();
-        gameManager.startGame();
-      }
-    });
-  },
-  fadeOut:function(){
+  //
+  //     } else {
+  //       console.log("Successfully created user account with uid:", userData.uid);
+  //     }
+  //   });
+  //
+  //   firebase.authWithPassword({
+  //     email    : $email,
+  //     password : $password
+  //   }, function(error, authData) {
+  //     if(error){
+  //       console.log("error logging in: " + error);
+  //     } else {
+  //       self.fadeOut();
+  //       gameManager.startGame();
+  //     }
+  //   });
+  // },
+  // fadeOut:function(){
     //should remove log in screen from DOM
-    this.$(".log-in-screen").fadeOut(1000);
+    // this.$(".log-in-screen").fadeOut(1000);
     //this.close();
-  },
-  initialize:function(){
-    _.bindAll(this,"render","logIn","fadeOut");
-    this.render();
-  },
-  render:function(){
-    this.$el.append(this.template);
-  },
-});
+//   },
+//   initialize:function(){
+//     _.bindAll(this,"render","logIn","fadeOut");
+//     this.render();
+//   },
+//   render:function(){
+//     this.$el.append(this.template);
+//   },
+// });
 
 var CardPoolItemView = Backbone.View.extend({
   tagName:"li",
@@ -138,6 +138,19 @@ var CardPoolView = Backbone.View.extend({
       self.$el.append(column.render().$el);
     })
   }
+});
+
+var HomeView = Backbone.View.extend({
+  el:".home",
+  initialize:function(){
+
+  },
+  events:{
+    "click .start-glimpse":function(){
+      alert("clicked");
+    }
+  }
+
 });
 
 var DeckBuilderView = Backbone.View.extend({

@@ -1,10 +1,35 @@
+/* global standards */
+*{
+  color:#E1E4D5 !important;
+}
+
+body{
+  background-color:#91957E;
+}
+
 img{
   height:400px;
 }
 
-body{
-  background-color:dimgrey;
+/* home screen */
+.home h1, .home h2{
+  text-align:center;
 }
+
+.home h1{
+  font-size:56px;
+}
+
+.home button{
+  display:block;
+  margin:0 auto;
+  margin-bottom:15px;
+}
+
+.home .draft-choice{
+  margin-top:55px;
+}
+
 
 /* log in screen */
 .log-in-screen{
@@ -37,36 +62,7 @@ body{
   font-size:28px;
 }
 
-.hand{
-  background-color:darkgrey;
-  position:absolute;
-  right:0;
-  left:0;
-  max-width:850px;
-  height:160px;
-}
-
-.deck{
-  position:absolute;
-  bottom:0px;
-  right:375px;
-}
-
-.deck img{
-  height:175px;
-}
-
-.card{
-  height:145px;
-  margin:5px;
-  position:relative;
-  transition: transform .4s;
-}
-
-.opponent-card{
-  position:fixed !important;
-}
-
+/* draft view */
 .completion-container{
   text-align:center;
 }
@@ -180,15 +176,6 @@ body{
 
 .colorless li:hover{
   background-color:#E8E8E8;
-}
-
-/* game board */
-.my-hand{
-  bottom:0px;
-}
-
-.opponent-hand{
-  top:0px;
 }
 
 /* pool builder */
