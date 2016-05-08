@@ -335,6 +335,9 @@ var GameManager = function() {
 
       EventHub.trigger("startDraft",this);
 
+      //keep track of picks and burns
+      //once picks and burns have been made,
+      //disable further card selection from pack
       EventHub.bind("draftCardClick",function(cardView){
         if(!self.waiting && self.playersPresent){
           EventHub.trigger("hidePopover");
@@ -355,6 +358,8 @@ var GameManager = function() {
             self.picked = false;
             self.burns = 0;
             self.setDisconnect();
+
+            EventHub.trigger("waitingForPack");
 
             currentGame.child("current-draft/done-picking").child(firebase.getAuth().uid).set(true);
           }

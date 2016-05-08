@@ -297,7 +297,8 @@ var DraftView = Backbone.View.extend({
   initialize:function(){
     _.bindAll(this,"renderDraftOptions","renderCard",
     "startDraft", "renderDraft","renderPick","renderWaitingScreen",
-    "renderPack","renderBurn","renderDraftComplete","hidePopover");
+    "renderPack","renderBurn","renderDraftComplete","hidePopover",
+    "renderWaitingPack");
 
     this.renderDraftOptions();
 
@@ -314,6 +315,7 @@ var DraftView = Backbone.View.extend({
     EventHub.bind("notEnoughDrafters",this.renderWaitingScreen);
     EventHub.bind("draftComplete",this.renderDraftComplete);
     EventHub.bind("hidePopover",this.hidePopover);
+    EventHub.bind("waitingForPack",this.renderWaitingPack);
   },
   events:{
     "click .start-draft":function(){
@@ -396,5 +398,8 @@ var DraftView = Backbone.View.extend({
   },
   hidePopover:function(){
     this.$(".inner-draft-container").find(".popover").remove();
+  },
+  renderWaitingPack:function(){
+    this.$(".inner-draft-container").html($("<h1>").css("text-align","center").text("waiting for other drafter."));
   }
 });
