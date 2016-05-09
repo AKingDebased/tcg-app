@@ -7,61 +7,61 @@ Backbone.View.prototype.close = function(){
   }
 };
 
-// var LogInView = Backbone.View.extend({
-//   el: "body",
-//   template: _.template($(".log-in-template").html()),
-//   events:{
-//     "click .log-in":"logIn",
-//     "keydown .password":"logIn"
-//   },
-//   logIn:function(event){
-    //only log in if button is clicked or enter key is pressed
-    // if(!(event.which === 1 || event.which === 13)){
-    //   return;
-    // }
-    //
-    // var $email = $(".email").val();
-    // var $password = $(".password").val();
-    // var userInfo = {};
-    // var self = this;
-    //
-    // firebase.createUser({
-    //   email: $email,
-    //   password: $password
-    // }, function(error, userData) {
-    //   if (error) {
-        //do error shit
-  //
-  //     } else {
-  //       console.log("Successfully created user account with uid:", userData.uid);
-  //     }
-  //   });
-  //
-  //   firebase.authWithPassword({
-  //     email    : $email,
-  //     password : $password
-  //   }, function(error, authData) {
-  //     if(error){
-  //       console.log("error logging in: " + error);
-  //     } else {
-  //       self.fadeOut();
-  //       gameManager.startGame();
-  //     }
-  //   });
-  // },
-  // fadeOut:function(){
-    //should remove log in screen from DOM
-    // this.$(".log-in-screen").fadeOut(1000);
-    //this.close();
-//   },
-//   initialize:function(){
-//     _.bindAll(this,"render","logIn","fadeOut");
-//     this.render();
-//   },
-//   render:function(){
-//     this.$el.append(this.template);
-//   },
-// });
+var LogInView = Backbone.View.extend({
+  el: "body",
+  template: _.template($(".log-in-template").html()),
+  events:{
+    "click .log-in":"logIn",
+    "keydown .password":"logIn"
+  },
+  logIn:function(event){
+only log in if button is clicked or enter key is pressed
+if(!(event.which === 1 || event.which === 13)){
+  return;
+}
+
+var $email = $(".email").val();
+var $password = $(".password").val();
+var userInfo = {};
+var self = this;
+
+firebase.createUser({
+  email: $email,
+  password: $password
+}, function(error, userData) {
+  if (error) {
+do error shit
+
+    } else {
+      console.log("Successfully created user account with uid:", userData.uid);
+    }
+  });
+
+  firebase.authWithPassword({
+    email    : $email,
+    password : $password
+  }, function(error, authData) {
+    if(error){
+      console.log("error logging in: " + error);
+    } else {
+      self.fadeOut();
+      gameManager.startGame();
+    }
+  });
+},
+fadeOut:function(){
+should remove log in screen from DOM
+this.$(".log-in-screen").fadeOut(1000);
+this.close();
+  },
+  initialize:function(){
+    _.bindAll(this,"render","logIn","fadeOut");
+    this.render();
+  },
+  render:function(){
+    this.$el.append(this.template);
+  },
+});
 
 var CardPoolItemView = Backbone.View.extend({
   tagName:"li",
@@ -143,13 +143,19 @@ var CardPoolView = Backbone.View.extend({
 var HomeView = Backbone.View.extend({
   el:".home",
   initialize:function(){
+    $('#myModal').modal({
+      keyboard: false
+    })
 
   },
   events:{
     "click .start-glimpse":function(){
-      alert("clicked");
+
     }
   }
+});
+
+var DraftInfoView = Backbone.View.extend({
 
 });
 
@@ -202,87 +208,87 @@ var DeckBuilderView = Backbone.View.extend({
   }
 });
 
-var ClientHandView = Backbone.View.extend({
-  el:".my-hand",
-  initialize:function(){
-    var self = this;
+// var ClientHandView = Backbone.View.extend({
+//   el:".my-hand",
+//   initialize:function(){
+//     var self = this;
 
-    //this one tosses an error? for some reason?
-    // _.bindAll(this,"drawCard","displayCard");
+//this one tosses an error? for some reason?
+// _.bindAll(this,"drawCard","displayCard");
 
-    EventHub.bind("drawCard",function(){
-      self.drawCard();
-    });
+//   EventHub.bind("drawCard",function(){
+//     self.drawCard();
+//   });
+//
+//   this.listenTo(playerManager.hand,"add",function(card){
+//     self.displayDraw(card);
+//   })
+// },
+// drawCard:function(){
+//remove returns an array, for reasons unknown. why can't i just pop() god dammit
+//   playerManager.hand.create(playerManager.deck.remove(playerManager.deck.at(0))[0]);
+// },
+// displayDraw:function(card){
+//should specify the jQuery ui bits elsewhere
+// var $cardImage = $("<img>");
+// $cardImage.attr("src",card.attributes.image).addClass("card").draggable({
+//half card height and with
+// cursorAt:{
+//   top:72.5,
+//   left:50.7
+// },
+// drag:function(event,ui){
+//   card.set({
+//temporary fix to account for mouse offset on card
+//           "xPercent":pxToPercent(event.clientX + 50.7,"x"),
+//           "yPercent":pxToPercent(event.clientY + 72.5,"y")
+//         });
+//       },
+//       stop:function(){
+//         card.set({
+//           revealed:true
+//         });
+//       }
+//     });
+//
+//     this.$el.append($cardImage);
+//   }
+// });
 
-    this.listenTo(playerManager.hand,"add",function(card){
-      self.displayDraw(card);
-    })
-  },
-  drawCard:function(){
-    //remove returns an array, for reasons unknown. why can't i just pop() god dammit
-    playerManager.hand.create(playerManager.deck.remove(playerManager.deck.at(0))[0]);
-  },
-  displayDraw:function(card){
-    //should specify the jQuery ui bits elsewhere
-    var $cardImage = $("<img>");
-    $cardImage.attr("src",card.attributes.image).addClass("card").draggable({
-      //half card height and with
-      cursorAt:{
-        top:72.5,
-        left:50.7
-      },
-      drag:function(event,ui){
-        card.set({
-          //temporary fix to account for mouse offset on card
-          "xPercent":pxToPercent(event.clientX + 50.7,"x"),
-          "yPercent":pxToPercent(event.clientY + 72.5,"y")
-        });
-      },
-      stop:function(){
-        card.set({
-          revealed:true
-        });
-      }
-    });
+// var OpponentHandView = Backbone.View.extend({
+//   el:".opponent-hand",
+//   initialize:function(){
+//     _.bindAll(this,"displayDraw");
+//
+//     var self = this;
+//     this.listenTo(this.collection,"add",function(card){
+//       self.displayDraw(card);
+//     });
+//
+//     this.listenTo(this.collection,"change",function(card){
+//       $(".card[cardid='" + card.attributes.id + "']").css({
+//         top:window.innerHeight - percentToPx(card.attributes.yPercent,"y") + "px",
+//         left:window.innerWidth - percentToPx(card.attributes.xPercent,"x") + "px"
+//       });
+//     });
 
-    this.$el.append($cardImage);
-  }
-});
-
-var OpponentHandView = Backbone.View.extend({
-  el:".opponent-hand",
-  initialize:function(){
-    _.bindAll(this,"displayDraw");
-
-    var self = this;
-    this.listenTo(this.collection,"add",function(card){
-      self.displayDraw(card);
-    });
-
-    this.listenTo(this.collection,"change",function(card){
-      $(".card[cardid='" + card.attributes.id + "']").css({
-        top:window.innerHeight - percentToPx(card.attributes.yPercent,"y") + "px",
-        left:window.innerWidth - percentToPx(card.attributes.xPercent,"x") + "px"
-      });
-    });
-
-    //should only trigger off of change in 'revealed'
-    //currently triggers off ANY change
-    this.listenTo(this.collection,"change",function(card){
-      if(card.attributes.revealed){
-        self.$(".card[cardid='" + card.attributes.id + "']").attr("src",card.attributes.image);
-      }
-    });
-  },
-  displayDraw:function(card){
-    var $cardImage = $("<img>").attr({
-      src:CARD_BACK,
-      cardID:card.attributes.id
-    }).addClass("card opponent-card");
-
-    this.$el.prepend($cardImage);
-  }
-});
+//should only trigger off of change in 'revealed'
+//currently triggers off ANY change
+//     this.listenTo(this.collection,"change",function(card){
+//       if(card.attributes.revealed){
+//         self.$(".card[cardid='" + card.attributes.id + "']").attr("src",card.attributes.image);
+//       }
+//     });
+//   },
+//   displayDraw:function(card){
+//     var $cardImage = $("<img>").attr({
+//       src:CARD_BACK,
+//       cardID:card.attributes.id
+//     }).addClass("card opponent-card");
+//
+//     this.$el.prepend($cardImage);
+//   }
+// });
 
 
 var DraftCardView = Backbone.View.extend({

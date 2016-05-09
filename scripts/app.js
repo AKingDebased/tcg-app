@@ -46,7 +46,6 @@ $(".upload-cards").click(function(){
       });
     });
   }).then(function(fetchedCards){
-    console.log("populating cards");
     fetchedCards = sortByColor(fetchedCards);
     var multiverseId;
     var validEdition;
@@ -77,33 +76,29 @@ $(".builder-view").click(function(){
   setActiveTab($(".deck-builder-container"),$(".deck-builder-tab"),"active");
 });
 
-$(".log-fetched").click(function(){
-  fetchedCards = sortByColor(fetchedCards);
-  var multiverseId;
-  var validEdition;
+// $(".log-fetched").click(function(){
+//   fetchedCards = sortByColor(fetchedCards);
+//   var multiverseId;
+//   var validEdition;
 
   // populate cards collections with color sorted card models
-  _.each(fetchedCards,function(cards,colorName){
-    _.each(cards,function(card){
-      validEdition = _.find(card.editions,function(edition){
-        return edition.multiverse_id !== 0;
-      })
-      gameManager.cardPool[colorName].create({
-        name:card.name,
-        colors:card.colors,
-        types:card.types,
-        image:validEdition.image_url
-      });
-    })
-  });
+//   _.each(fetchedCards,function(cards,colorName){
+//     _.each(cards,function(card){
+//       validEdition = _.find(card.editions,function(edition){
+//         return edition.multiverse_id !== 0;
+//       })
+//       gameManager.cardPool[colorName].create({
+//         name:card.name,
+//         colors:card.colors,
+//         types:card.types,
+//         image:validEdition.image_url
+//       });
+//     })
+//   });
+//
+//   fetchedCards = [];
+// });
 
-  fetchedCards = [];
-});
-
-//hand
-$(".deck").on("dblclick",function(){
-  EventHub.trigger("drawCard");
-});
 
 //pool & builder modal
 $(".draft-pool-tab").click(function(){
@@ -118,17 +113,3 @@ $('.myModal').on('hidden.bs.modal', function () {
   setActiveTab($(".draft-pool-tab"),$(".draft-pool-container"),"inactive");
   setActiveTab($(".deck-builder-container"),$(".deck-builder-tab"),"inactive");
 })
-
-
-//draft builder tab
-$(".save-deck").click(function(){
-  playerManager.mainboard.each(function(card){
-    //fucking Cards bug, man
-    if(card.get("name") === "none"){
-      return;
-    }
-    playerManager.deck.create(card.attributes);
-  });
-
-  playerManager.deck.shuffle();
-});

@@ -10,35 +10,38 @@
 <body>
   <div class="container">
     <div class="home">
-      <h1>mtg draft simulator</h1>
-      <h2>choose your format</h2>
-
-      <div class="draft-choice">
-        <button class="btn btn-default start-glimpse">glimpse draft</button>
-        <button class="btn btn-default start-grid">grid draft</button>
-        <button class="btn btn-default start-winston">winston draft</button>
-        <button class="btn btn-default start-winchester">winchester draft</button>
+      <div class="pool-builder">
+        <h2>upload card pool</h2>
+        <h4>(forgive the slapdash. you catch me between builds)</h4>
+        <textarea></textarea>
+        <button class="btn btn-default upload-cards">upload card pool</button>
       </div>
     </div>
+
+    <!-- <h1>mtg draft simulator</h1>
+    <h2>choose your format</h2>
+
+    <div class="draft-choice">
+    <button class="btn btn-default start-glimpse">glimpse draft</button>
+    <button class="btn btn-default start-grid">grid draft</button>
+    <button class="btn btn-default start-winston">winston draft</button>
+    <button class="btn btn-default start-winchester">winchester draft</button>
   </div>
+</div> -->
+</div>
 
-
-  <!-- <script type="template" class="log-in-template">
-  <div class="log-in-screen">
-  <div class="container">
-  <div class="log-in-box center-block">
-  <p>email</p>
-  <input class="email" type="text">
-  <p>password</p>
-  <input class="password" type="password">
-  <button class="btn btn-primary center-block log-in">log in</button>
+<script type="template" class="draft-info-template">
+<div class="modal fade draft-info-modal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+<div class="modal-dialog modal-sm">
+<div class="modal-content">
+...
 </div>
 </div>
 </div>
-</script> -->
+</script>
 
 <script src="scripts/lib/jquery.min.js"></script>
-<!-- <script src="scripts/lib/jquery-ui.min.js"></script> -->
+<script src="scripts/lib/jquery-ui.min.js"></script>
 <script src="scripts/lib/underscore.js"></script>
 <script src="scripts/lib/bootstrap.min.js"></script>
 <script src="scripts/lib/backbone.js"></script>
