@@ -1,9 +1,22 @@
+var App = new Marionette.Application({});
+
+App.addInitializer(function(){
+  console.log("app started");
+
+  App.rootLayout = new RootLayout();
+  App.homeView = new HomeView();
+
+  App.rootLayout.render().mainRegion.show(App.homeView);
+});
+
+App.start();
+
+
 //NAUGHTY GLOBAL VARIABLES
 //constant var for card back location
 var CARD_BACK = "../resources/img/mtg-card-back.jpg"
 var LENGTH_OFFSET = 1;
 
-var homeView = new HomeView();
 var gameManager = new GameManager();
 var playerManager;
 
@@ -81,7 +94,7 @@ $(".builder-view").click(function(){
 //   var multiverseId;
 //   var validEdition;
 
-  // populate cards collections with color sorted card models
+// populate cards collections with color sorted card models
 //   _.each(fetchedCards,function(cards,colorName){
 //     _.each(cards,function(card){
 //       validEdition = _.find(card.editions,function(edition){

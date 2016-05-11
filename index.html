@@ -8,52 +8,65 @@
   <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
+
+
+  <!-- temp fix, should use gulp or something -->
+  <script type="template" class="gatekeeper-template">
   <div class="container">
-    <div class="home">
-      <div class="pool-builder">
-        <h2>upload card pool</h2>
-        <h4>(forgive the slapdash. you catch me between builds)</h4>
-        <textarea></textarea>
-        <button class="btn btn-default upload-cards">upload card pool</button>
-      </div>
-    </div>
-
-    <!-- <h1>mtg draft simulator</h1>
-    <h2>choose your format</h2>
-
-    <div class="draft-choice">
-    <button class="btn btn-default start-glimpse">glimpse draft</button>
-    <button class="btn btn-default start-grid">grid draft</button>
-    <button class="btn btn-default start-winston">winston draft</button>
-    <button class="btn btn-default start-winchester">winchester draft</button>
+  <h1>waiting for drafters...</h1>
+  <h2>0/<%= maxDrafters %> drafters present</h2>
   </div>
-</div> -->
-</div>
+  </script>
+  <script src="scripts/lib/jquery.min.js"></script>
+  <script src="scripts/lib/jquery-ui.min.js"></script>
+  <script src="scripts/lib/underscore.js"></script>
+  <script src="scripts/lib/bootstrap.min.js"></script>
+  <script src="scripts/lib/backbone.js"></script>
+  <script src="scripts/lib/marionette.min.js"></script>
+  <script src="https://cdn.firebase.com/js/client/2.4.1/firebase.js"></script>
+  <script src="https://cdn.firebase.com/libs/backbonefire/0.5.1/backbonefire.min.js"></script>
+  <script src="scripts/firebaseRefs.js"></script>
+  <script src="scripts/models.js"></script>
+  <script src="scripts/collections.js"></script>
+  <script src="scripts/views.js"></script>
+  <script src="scripts/card-functions.js"></script>
+  <script src="scripts/namespaces.js"></script>
+  <script src="scripts/app.js"></script>
+</body>
+</html>
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title></title>
+  <link rel="stylesheet" href="css/sandstone-bootstrap.css">
+  <link rel="stylesheet" href="css/animate.css">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
 
-<script type="template" class="draft-info-template">
-<div class="modal fade draft-info-modal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
-<div class="modal-dialog modal-sm">
-<div class="modal-content">
-...
-</div>
-</div>
-</div>
-</script>
 
-<script src="scripts/lib/jquery.min.js"></script>
-<script src="scripts/lib/jquery-ui.min.js"></script>
-<script src="scripts/lib/underscore.js"></script>
-<script src="scripts/lib/bootstrap.min.js"></script>
-<script src="scripts/lib/backbone.js"></script>
-<script src="https://cdn.firebase.com/js/client/2.4.1/firebase.js"></script>
-<script src="https://cdn.firebase.com/libs/backbonefire/0.5.1/backbonefire.min.js"></script>
-<script src="scripts/firebaseRefs.js"></script>
-<script src="scripts/models.js"></script>
-<script src="scripts/collections.js"></script>
-<script src="scripts/views.js"></script>
-<script src="scripts/card-functions.js"></script>
-<script src="scripts/namespaces.js"></script>
-<script src="scripts/app.js"></script>
-
+  <!-- temp fix, should use gulp or something -->
+  <script type="template" class="gatekeeper-template">
+  <div class="container">
+  <h1>waiting for drafters...</h1>
+  <h2>0/<%= maxDrafters %> drafters present</h2>
+  </div>
+  </script>
+  <script src="scripts/lib/jquery.min.js"></script>
+  <script src="scripts/lib/jquery-ui.min.js"></script>
+  <script src="scripts/lib/underscore.js"></script>
+  <script src="scripts/lib/bootstrap.min.js"></script>
+  <script src="scripts/lib/backbone.js"></script>
+  <script src="scripts/lib/marionette.min.js"></script>
+  <script src="https://cdn.firebase.com/js/client/2.4.1/firebase.js"></script>
+  <script src="https://cdn.firebase.com/libs/backbonefire/0.5.1/backbonefire.min.js"></script>
+  <script src="scripts/firebaseRefs.js"></script>
+  <script src="scripts/models.js"></script>
+  <script src="scripts/collections.js"></script>
+  <script src="scripts/views.js"></script>
+  <script src="scripts/card-functions.js"></script>
+  <script src="scripts/namespaces.js"></script>
+  <script src="scripts/app.js"></script>
 </body>
 </html>

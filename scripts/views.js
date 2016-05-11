@@ -1,3 +1,79 @@
+var RootLayout = Marionette.LayoutView.extend({
+  el:"body",
+  template: _.template("<div class=main-region></div>"),
+  initialize:function(){
+    console.log("app layout view online");
+  },
+  regions:{
+    mainRegion:".main-region"
+  },
+});
+
+var GatekeeperView = Marionette.ItemView.extend({
+  attributes:{
+    class:"gatekeeper"
+  },
+  template:function(){
+    var templateHTML = $(".gatekeeper").html()
+    console.log(templateHTML);
+    return _.template("lol")
+  }
+});
+
+var HomeView = Backbone.View.extend({
+  attributes:{
+    class:"home"
+  },
+  initialize:function(){
+    console.log("home view online");
+    _.bindAll(this,"displayGlimpseInfo");
+  },
+  events:{
+    "click .start-glimpse":"displayGlimpseInfo",
+    "click .start-draft":function(){
+      //empty the region when the modal is fully hidden
+      $(".draft-info-modal").modal("hide").on("hidden.bs.modal",function(){
+        App.rootLayout.mainRegion.empty();
+        App.gatekeeperView = new GatekeeperView();
+        App.rootLayout.mainRegion.show(App.gatekeeperView);
+      });
+    }
+  },
+  displayGlimpseInfo:function(){
+    //these 4 display functions should be condensed down to one
+    $(".draft-info-modal").modal('show');
+    $.get('templates/glimpse-draft-info.html', function (data) {
+      $(".draft-info").html(_.template(data));
+    }, 'html');
+  },
+  displayGridInfo:function(){
+
+  },
+  displayWinstonInfo:function(){
+
+  },
+  displayWinchesterInfo:function(){
+
+  },
+  render:function(){
+    var self = this;
+    $.get('templates/home.html', function (data) {
+      self.$el.html(_.template(data));
+    }, 'html');
+  }
+});
+
+
+
+
+
+
+
+
+
+
+
+
 //prevent memory leaks when removing views from DOM
 Backbone.View.prototype.close = function(){
   this.remove();
@@ -7,61 +83,6 @@ Backbone.View.prototype.close = function(){
   }
 };
 
-var LogInView = Backbone.View.extend({
-  el: "body",
-  template: _.template($(".log-in-template").html()),
-  events:{
-    "click .log-in":"logIn",
-    "keydown .password":"logIn"
-  },
-  logIn:function(event){
-only log in if button is clicked or enter key is pressed
-if(!(event.which === 1 || event.which === 13)){
-  return;
-}
-
-var $email = $(".email").val();
-var $password = $(".password").val();
-var userInfo = {};
-var self = this;
-
-firebase.createUser({
-  email: $email,
-  password: $password
-}, function(error, userData) {
-  if (error) {
-do error shit
-
-    } else {
-      console.log("Successfully created user account with uid:", userData.uid);
-    }
-  });
-
-  firebase.authWithPassword({
-    email    : $email,
-    password : $password
-  }, function(error, authData) {
-    if(error){
-      console.log("error logging in: " + error);
-    } else {
-      self.fadeOut();
-      gameManager.startGame();
-    }
-  });
-},
-fadeOut:function(){
-should remove log in screen from DOM
-this.$(".log-in-screen").fadeOut(1000);
-this.close();
-  },
-  initialize:function(){
-    _.bindAll(this,"render","logIn","fadeOut");
-    this.render();
-  },
-  render:function(){
-    this.$el.append(this.template);
-  },
-});
 
 var CardPoolItemView = Backbone.View.extend({
   tagName:"li",
@@ -140,22 +161,9 @@ var CardPoolView = Backbone.View.extend({
   }
 });
 
-var HomeView = Backbone.View.extend({
-  el:".home",
-  initialize:function(){
-    $('#myModal').modal({
-      keyboard: false
-    })
-
-  },
-  events:{
-    "click .start-glimpse":function(){
-
-    }
-  }
-});
 
 var DraftInfoView = Backbone.View.extend({
+  el:".draft-info"
 
 });
 
