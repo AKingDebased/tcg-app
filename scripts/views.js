@@ -13,7 +13,16 @@ var GatekeeperView = Marionette.ItemView.extend({
   attributes:{
     class:"gatekeeper"
   },
-  template:_.template($("#gatekeeper-template").html())({maxDrafters:2})
+  ui:{
+    activeDrafters:".activeDrafters"
+  },
+  template:_.template($("#gatekeeper-template").html())({maxDrafters:2}),
+  modelEvents:{
+    "sync":"changeNumDrafters"
+  },
+  changeNumDrafters:function(data){
+    this.ui.activeDrafters.text(Object.keys(data.get("activeDrafters")).length);
+  }
 });
 
 var HomeView = Backbone.View.extend({
@@ -30,9 +39,15 @@ var HomeView = Backbone.View.extend({
       //empty the region when the modal is fully hidden
       $(".draft-info-modal").modal("hide").on("hidden.bs.modal",function(){
         App.rootLayout.mainRegion.empty();
-        App.gatekeeperView = new GatekeeperView();
+
+        var myStatus = {};
+        myStatus[firebase.getAuth().uid] = true;
+
+        App.gatekeeperView = new GatekeeperView({
+          model: new GatekeeperModel()
+        });
+
         App.rootLayout.mainRegion.show(App.gatekeeperView);
-        App.enterDraft();
       });
     }
   },
@@ -44,13 +59,13 @@ var HomeView = Backbone.View.extend({
     }, 'html');
   },
   displayGridInfo:function(){
-
+    //TODO
   },
   displayWinstonInfo:function(){
-
+    //TODO
   },
   displayWinchesterInfo:function(){
-
+    //TODO
   },
   render:function(){
     var self = this;
@@ -261,8 +276,8 @@ var DraftView = Backbone.View.extend({
   events:{
     "click .start-draft":function(){
       //this doesn't feel quite right does it
-      draftManager = new DraftManager();
-      this.collection = draftManager.draftPool;
+      App.draftManager = new DraftManager();
+      this.collection = App.draftManager.draftPool;
       draftManager.addPlayer();
     },
     "click .restart-draft":"renderDraftOptions"

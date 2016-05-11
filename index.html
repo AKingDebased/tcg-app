@@ -14,7 +14,8 @@
   <script type="template" id="gatekeeper-template">
   <div class="container">
   <h1>waiting for drafters...</h1>
-  <h2>0/<%= maxDrafters %> drafters present</h2>
+  <h2><span class="activeDrafters">0</span>/<%= maxDrafters %> drafters present</h2>
+  <button class="btn btn-default enter-draft" disabled="disabled">enter draft</button>
   </div>
   </script>
   <script src="scripts/lib/jquery.min.js"></script>
