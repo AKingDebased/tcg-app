@@ -83,21 +83,3 @@ var setActiveTab = function($tab,$pane,state){
     $pane.removeClass("active");
   }
 };
-
-var pxToPercent = function(pos,axis){
-  if(axis === "x"){
-    return (pos / window.innerWidth) * 100;
-  } else if (axis === "y"){
-    return (pos / window.innerHeight) * 100;
-  }
-  return pos;
-}
-
-var percentToPx = function(percent,axis){
-  if(axis === "x"){
-    return (percent / 100) * window.innerWidth;
-  } else if (axis === "y"){
-    return (percent / 100) * window.innerHeight;
-  }
-  return percent;
-}

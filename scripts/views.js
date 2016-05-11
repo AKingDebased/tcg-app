@@ -13,11 +13,7 @@ var GatekeeperView = Marionette.ItemView.extend({
   attributes:{
     class:"gatekeeper"
   },
-  template:function(){
-    var templateHTML = $(".gatekeeper").html()
-    console.log(templateHTML);
-    return _.template("lol")
-  }
+  template:_.template($("#gatekeeper-template").html())({maxDrafters:2})
 });
 
 var HomeView = Backbone.View.extend({
@@ -36,6 +32,7 @@ var HomeView = Backbone.View.extend({
         App.rootLayout.mainRegion.empty();
         App.gatekeeperView = new GatekeeperView();
         App.rootLayout.mainRegion.show(App.gatekeeperView);
+        App.enterDraft();
       });
     }
   },
@@ -146,7 +143,7 @@ var CardPoolView = Backbone.View.extend({
   },
   createColumns:function(){
     var self = this;
-    _.each(gameManager.cardPool,function(color,colorName){
+    _.each(App.gameManager.cardPool,function(color,colorName){
       self.columns.push(new CardPoolColView({
         className:"draft-col " + colorName,
         collection: color
@@ -215,89 +212,6 @@ var DeckBuilderView = Backbone.View.extend({
     this.$(".sideboard").append(cardItemView.renderInSideboard().$el);
   }
 });
-
-// var ClientHandView = Backbone.View.extend({
-//   el:".my-hand",
-//   initialize:function(){
-//     var self = this;
-
-//this one tosses an error? for some reason?
-// _.bindAll(this,"drawCard","displayCard");
-
-//   EventHub.bind("drawCard",function(){
-//     self.drawCard();
-//   });
-//
-//   this.listenTo(playerManager.hand,"add",function(card){
-//     self.displayDraw(card);
-//   })
-// },
-// drawCard:function(){
-//remove returns an array, for reasons unknown. why can't i just pop() god dammit
-//   playerManager.hand.create(playerManager.deck.remove(playerManager.deck.at(0))[0]);
-// },
-// displayDraw:function(card){
-//should specify the jQuery ui bits elsewhere
-// var $cardImage = $("<img>");
-// $cardImage.attr("src",card.attributes.image).addClass("card").draggable({
-//half card height and with
-// cursorAt:{
-//   top:72.5,
-//   left:50.7
-// },
-// drag:function(event,ui){
-//   card.set({
-//temporary fix to account for mouse offset on card
-//           "xPercent":pxToPercent(event.clientX + 50.7,"x"),
-//           "yPercent":pxToPercent(event.clientY + 72.5,"y")
-//         });
-//       },
-//       stop:function(){
-//         card.set({
-//           revealed:true
-//         });
-//       }
-//     });
-//
-//     this.$el.append($cardImage);
-//   }
-// });
-
-// var OpponentHandView = Backbone.View.extend({
-//   el:".opponent-hand",
-//   initialize:function(){
-//     _.bindAll(this,"displayDraw");
-//
-//     var self = this;
-//     this.listenTo(this.collection,"add",function(card){
-//       self.displayDraw(card);
-//     });
-//
-//     this.listenTo(this.collection,"change",function(card){
-//       $(".card[cardid='" + card.attributes.id + "']").css({
-//         top:window.innerHeight - percentToPx(card.attributes.yPercent,"y") + "px",
-//         left:window.innerWidth - percentToPx(card.attributes.xPercent,"x") + "px"
-//       });
-//     });
-
-//should only trigger off of change in 'revealed'
-//currently triggers off ANY change
-//     this.listenTo(this.collection,"change",function(card){
-//       if(card.attributes.revealed){
-//         self.$(".card[cardid='" + card.attributes.id + "']").attr("src",card.attributes.image);
-//       }
-//     });
-//   },
-//   displayDraw:function(card){
-//     var $cardImage = $("<img>").attr({
-//       src:CARD_BACK,
-//       cardID:card.attributes.id
-//     }).addClass("card opponent-card");
-//
-//     this.$el.prepend($cardImage);
-//   }
-// });
-
 
 var DraftCardView = Backbone.View.extend({
   tagName:"img",

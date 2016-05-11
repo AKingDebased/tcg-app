@@ -3,11 +3,61 @@ var App = new Marionette.Application({});
 App.addInitializer(function(){
   console.log("app started");
 
-  App.rootLayout = new RootLayout();
-  App.homeView = new HomeView();
+  this.gameManager = new GameManager();
+  this.rootLayout = new RootLayout();
+  this.homeView = new HomeView();
 
-  App.rootLayout.render().mainRegion.show(App.homeView);
+  this.rootLayout.render().mainRegion.show(this.homeView);
 });
+
+
+App.enterDraft = function(){
+  var self = this;
+
+  currentGame.child("current-draft/drafting").once("value",function(snapshot){
+    if(!snapshot.val()){
+      //draft hasn't started
+      currentGame.child("current-draft/active-drafters").once("value",function(snapshot){
+        //draft is not full
+        if(snapshot.numChildren() <= 1){
+          currentGame.child("current-draft/active-drafters").child(firebase.getAuth().uid).set(true);
+          currentGame.child("current-draft/drafting").on("value",function(snapshot){
+            if(snapshot.val()){
+              console.log("old fashioned way");
+              self.currentDraftManager = new GlimpseDraftManager();
+              currentGame.child("current-draft/drafting").off("value");
+            }
+          });
+          EventHub.trigger("notEnoughDrafters");
+        }
+        //fellow drafter already present
+        if(snapshot.numChildren() === 1){
+          currentGame.child("current-draft/drafting").transaction(function(currentVal){
+            if(currentVal === null){
+              return true
+            } else if(currentVal === true){
+              return;
+            }
+          },function(error,committed,snapshot){
+            if(committed){
+              console.log("draft full, starting now");
+            } else {
+              console.log("draft full, in progress");
+            }
+          });
+        }
+      });
+    } else {
+      //oy vey, long lines
+      currentGame.child("current-draft/inactive-drafters").child(firebase.getAuth().uid).once("value",function(snapshot){
+        if(snapshot.val() !== null){
+          self.currentDraftManager = new GlimpseDraftManager(true,snapshot.val().draftNumber,snapshot.val().picked,snapshot.val().burns,snapshot.val().remainingPacks);
+          return;
+        }
+      });
+    }
+  });
+}
 
 App.start();
 
@@ -17,7 +67,6 @@ App.start();
 var CARD_BACK = "../resources/img/mtg-card-back.jpg"
 var LENGTH_OFFSET = 1;
 
-var gameManager = new GameManager();
 var playerManager;
 
 var deckBuilderView;
