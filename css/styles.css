@@ -5,10 +5,6 @@
   color:#E1E4D5 !important;
 }
 
-* input, * textarea{
-  color:black !important;
-}
-
 body{
   background-color:#91957E;
 }
@@ -59,6 +55,30 @@ img{
 .gatekeeper h1 {
   margin-top: 200px;
   font-size: 70px;
+}
+
+/* pool upload */
+.upload-pool h1{
+  text-align:center;
+}
+
+.upload-pool .pool-uploader{
+  display:block;
+  margin:0 auto;
+  height:375px;
+  width:250px;
+  background-color:#6C7059;
+  border-radius:10px;
+  border:2px solid #3D402D;
+  resize:none;
+  padding:10px;
+  box-sizing:border-box;
+  box-shadow:inset 2px 2px 10px #3B3C35;
+}
+
+.upload-pool .upload-button{
+  display:block;
+  margin:15px auto;
 }
 
 /* draft view */

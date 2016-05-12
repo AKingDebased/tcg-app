@@ -22,9 +22,6 @@ var me = function(){
   $(".password").val("TheSunSails15");
 }
 
-//terrible place for this
-var EventHub = _.extend({}, Backbone.Events);
-
 var formatForAJAX = function(card){
   card = card.toLowerCase();
   var regex;

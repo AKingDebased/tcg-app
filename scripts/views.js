@@ -9,19 +9,60 @@ var RootLayout = Marionette.LayoutView.extend({
   },
 });
 
+var UploadPoolView = Backbone.View.extend({
+  attributes:{
+    class:"upload-pool"
+  },
+  initialize:function(){
+    console.log("upload pool view online");
+  },
+  events:{
+    "click .upload-button":function(){
+      App.vent.trigger("uploadPool");
+    }
+  },
+  render:function(){
+    $.get('templates/upload-pool.html', function (data) {
+      $(".upload-pool").html(_.template(data));
+    }, 'html');
+  }
+});
+
+var DraftView = Backbone.View.extend({});
+
 var GatekeeperView = Marionette.ItemView.extend({
   attributes:{
     class:"gatekeeper"
   },
   ui:{
-    activeDrafters:".activeDrafters"
+    activeDrafters:".activeDrafters",
+    maxDrafters:".maxDrafters",
+    enterDraft:".enter-draft",
+    waitingLabel:".waiting-label"
   },
-  template:_.template($("#gatekeeper-template").html())({maxDrafters:2}),
+  //template needs to be loaded externally
+  template:_.template($("#gatekeeper-template").html()),
   modelEvents:{
-    "sync":"changeNumDrafters"
+    "sync":"changeNumDrafters draftReady"
+  },
+  events:{
+    "click .enter-draft":"startDraft"
   },
   changeNumDrafters:function(data){
     this.ui.activeDrafters.text(Object.keys(data.get("activeDrafters")).length);
+    this.ui.maxDrafters.text(data.get("maxDrafters"));
+  },
+  draftReady:function(data){
+    //if all drafters are present
+    if(Object.keys(data.get("activeDrafters")).length === data.get("maxDrafters")){
+      this.ui.enterDraft.removeAttr("disabled");
+      this.ui.waitingLabel.text("all drafters present!");
+    }
+  },
+  startDraft:function(){
+    App.rootLayout.mainRegion.empty();
+    App.rootLayout.mainRegion.show(new UploadPoolView());
+    App.poolUploadHelper = new PoolUploadHelper();
   }
 });
 
@@ -245,117 +286,5 @@ var DraftCardView = Backbone.View.extend({
       "data-toggle":"popover"
     }).addClass("draft-card");
     return this;
-  }
-});
-
-var DraftView = Backbone.View.extend({
-  el:".draft-container",
-  initialize:function(){
-    _.bindAll(this,"renderDraftOptions","renderCard",
-    "startDraft", "renderDraft","renderPick","renderWaitingScreen",
-    "renderPack","renderBurn","renderDraftComplete","hidePopover",
-    "renderWaitingPack");
-
-    this.renderDraftOptions();
-
-    var self = this;
-    EventHub.bind("draftCardClick",function(cardView){
-      //don't remove cards if user is waiting for a new pack
-      //i don't like these references to draft manager. should use an event instead.
-      if(!self.draftManager.waiting && self.draftManager.playersPresent){
-        cardView.remove();
-      }
-    });
-    EventHub.bind("renderPack",this.renderPack);
-    EventHub.bind("startDraft",this.startDraft);
-    EventHub.bind("notEnoughDrafters",this.renderWaitingScreen);
-    EventHub.bind("draftComplete",this.renderDraftComplete);
-    EventHub.bind("hidePopover",this.hidePopover);
-    EventHub.bind("waitingForPack",this.renderWaitingPack);
-  },
-  events:{
-    "click .start-draft":function(){
-      //this doesn't feel quite right does it
-      App.draftManager = new DraftManager();
-      this.collection = App.draftManager.draftPool;
-      draftManager.addPlayer();
-    },
-    "click .restart-draft":"renderDraftOptions"
-  },
-  renderDraftOptions:function(){
-    var $draftOptionsDiv = $("<div>").addClass("draft-options");
-    var $glimpseDraftDiv = $("<button>").addClass("btn btn-primary start-draft").text("glimpse draft");
-
-    //prepend could be problematic if they manage to click multiple times
-    this.$el.html($draftOptionsDiv.append($glimpseDraftDiv));
-  },
-  renderCard:function(card){
-    var newDraftCardView = new DraftCardView({model:card});
-    this.$(".inner-draft-container").append(newDraftCardView.render().$el);
-  },
-  startDraft:function(draftManager){
-    var self = this;
-
-    //put draft elements on the screen
-    self.renderDraft();
-    //set the current draft mode
-    this.draftManager = draftManager;
-    this.listenTo(this.draftManager.draftPicks,"add",function(card){
-      self.renderPick(card);
-    });
-    this.listenTo(this.draftManager.draftBurns,"add",function(card){
-      self.renderBurn(card);
-    })
-  },
-  renderDraft:function(){
-    this.$el.html("");
-    var $innerDraftContainer = $("<div>").addClass("inner-draft-container");
-    var $picks = $("<div>").addClass("picks").append("<h1>picks</h1>");
-    var $burns = $("<div>").addClass("burns").append("<h1>burns</h1>");
-
-    this.$el.append($innerDraftContainer);
-    this.$el.append($picks);
-    this.$el.append($burns);
-  },
-  renderPick:function(card){
-    //maybe consolidate this and renderBurn?
-    var $pick = $("<img>").attr("src",card.get("image")).addClass("draft-card");
-    this.$(".picks").append($pick);
-  },
-  renderBurn:function(card){
-    var $burn = $("<img>").attr("src",card.get("image")).addClass("draft-card");
-    this.$(".burns").append($burn);
-  },
-  renderWaitingScreen:function(){
-    //this was written at 3 am, gimme a break
-    this.$el.html($("<h1>").css("text-align","center").text("waiting for other player"));
-  },
-  renderPack:function(pack){
-    var self = this;
-
-    this.$(".inner-draft-container").html("");
-
-    pack.each(function(card){
-      //that one default card, fucking it all up again
-      if(card.get("name") === "none"){
-        return;
-      }
-      self.renderCard(card);
-    });
-  },
-  renderDraftComplete:function(){
-    //maybe put all these classes in the css file
-    var $endHeader = $("<h1>").text("the draft has ended.").addClass("center-block");
-    var $endSubHeader = $("<h3>").text("all your picks have been transferred to your mainboard.").addClass("center-block");
-    var $restartButton = $("<button>").addClass("btn btn-primary restart-draft").text("draft again");
-    var $completionContainer = $("<div>").addClass("completion-container").append($endHeader,$endSubHeader,$restartButton);
-
-    this.$el.html($completionContainer);
-  },
-  hidePopover:function(){
-    this.$(".inner-draft-container").find(".popover").remove();
-  },
-  renderWaitingPack:function(){
-    this.$(".inner-draft-container").html($("<h1>").css("text-align","center").text("waiting for other drafter."));
   }
 });

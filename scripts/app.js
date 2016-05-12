@@ -3,29 +3,24 @@ var App = new Marionette.Application({});
 App.addInitializer(function(){
   console.log("app started");
 
-  //obvious repetition, needs replacing
-  if(firebase.getAuth()){
-    console.log(firebase.getAuth().uid);
-    App.gameManager = new GameManager();
-    App.rootLayout = new RootLayout();
-    App.homeView = new HomeView();
-
-    App.rootLayout.render().mainRegion.show(App.homeView);
-  } else {
-    firebase.authAnonymously(function(error, authData) { /* Your Code */
-      if(error){
-        console.log(error);
-      } else {
-        console.log(firebase.getAuth().uid);
-        App.gameManager = new GameManager();
-        App.rootLayout = new RootLayout();
-        App.homeView = new HomeView();
-
-        App.rootLayout.render().mainRegion.show(App.homeView);
-      }
+  if(!firebase.getAuth()){
+    firebase.authAnonymously(function(error, authData) {
+      console.log("authenticated",authData.uid);
+    }, {
+      //this shit isn't working for some unknown reason
+      remember: "sessionOnly"
     });
-
   }
+
+  firebase.onAuth(function(authData){
+    if(authData){
+      console.log("authenticated",authData.uid);
+      App.rootLayout = new RootLayout();
+      App.homeView = new HomeView();
+
+      App.rootLayout.render().mainRegion.show(App.homeView);
+    }
+  });
 });
 
 App.start();
@@ -61,7 +56,6 @@ $(".upload-cards").click(function(){
         fetchedCards.push(fetchedCard);
 
         if(fetchedCards.length === cardNames.length){
-          console.log("resolving")
           resolve(fetchedCards);
         }
       });
@@ -77,7 +71,7 @@ $(".upload-cards").click(function(){
         validEdition = _.find(card.editions,function(edition){
           return edition.multiverse_id !== 0;
         })
-        gameManager.cardPool[colorName].create({
+        App.poolUploadHelper.draftPool[colorName].create({
           name:card.name,
           colors:card.colors,
           types:card.types,
