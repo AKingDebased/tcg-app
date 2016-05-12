@@ -9,17 +9,25 @@ var RootLayout = Marionette.LayoutView.extend({
   },
 });
 
-var UploadPoolView = Backbone.View.extend({
+var UploadPoolView = Marionette.ItemView.extend({
   attributes:{
     class:"upload-pool"
   },
   initialize:function(){
     console.log("upload pool view online");
+    this.listenTo(App.vent,"clearPoolEl",this.clearPoolEl)
+  },
+  ui:{
+    poolUploader:".pool-uploader"
   },
   events:{
     "click .upload-button":function(){
-      App.vent.trigger("uploadPool");
+      //console.log(this.ui.poolUploader)
+      this.model.uploadCards($(".pool-uploader").val());
     }
+  },
+  clearPoolEl:function(){
+    $(".pool-uploader").val("");
   },
   render:function(){
     $.get('templates/upload-pool.html', function (data) {
@@ -61,8 +69,10 @@ var GatekeeperView = Marionette.ItemView.extend({
   },
   startDraft:function(){
     App.rootLayout.mainRegion.empty();
-    App.rootLayout.mainRegion.show(new UploadPoolView());
-    App.poolUploadHelper = new PoolUploadHelper();
+    App.poolUploadModel = new PoolUploadModel();
+    App.rootLayout.mainRegion.show(new UploadPoolView({
+      model:App.poolUploadModel
+    }));
   }
 });
 

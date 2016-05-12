@@ -41,54 +41,6 @@ var PlayerManager = function(){
   console.log("player set");
 }
 
-var PoolUploadHelper = function(){
-  this.draftPool = new Cards("current-draft/" + firebase.getAuth().uid + "/draft-pool");
-  this.uploadCards = function(draftPool){
-    var cardNames = $(".upload-pool .pool-uploader").val().split("\n");
-    $(".upload-pool .pool-uploader").val("");
-
-    //promise that fetches cards from deckbrew, then
-    //fills the global cardPool collection with card models,
-    //sorted by color
-    this.uploadCardsPromise = new Promise(function(resolve,reject){
-      var fetchedCards = [];
-
-      _.each(cardNames,function(currentCard){
-        $.get("https://api.deckbrew.com/mtg/cards/" + formatForAJAX(currentCard),function(fetchedCard){
-          fetchedCards.push(fetchedCard);
-
-          if(fetchedCards.length === cardNames.length){
-            resolve(fetchedCards);
-          }
-        });
-      });
-    }).then(function(fetchedCards){
-      fetchedCards = sortByColor(fetchedCards);
-      var multiverseId;
-      var validEdition;
-
-      // populate cards collections with color sorted card models
-      _.each(fetchedCards,function(cards,colorName){
-        _.each(cards,function(card){
-          validEdition = _.find(card.editions,function(edition){
-            return edition.multiverse_id !== 0;
-          })
-          this.draftPool[colorName].create({
-            name:card.name,
-            colors:card.colors,
-            types:card.types,
-            image:validEdition.image_url
-          });
-        })
-      });
-    });
-  }
-
-  //probably not the right way to do this, but hey, it works
-  App.vent.on("uploadPool",this.uploadCards,this);
-
-  console.log("pool helper online");
-}
 
 //only works with glimpse draft
 //needs to be made more generic, to allow for other draft formats
