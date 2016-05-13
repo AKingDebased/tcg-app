@@ -11,7 +11,8 @@
 <body>
 
 
-  <!-- temp fix, should use gulp or something -->
+  <!-- asynchronous template loading using $.get is causing
+  rendering issues. for now, resorting to script tag templates -->
   <script type="template" id="gatekeeper-template">
   <div class="container">
   <h1 class="waiting-label">waiting for drafters...</h1>
@@ -19,6 +20,19 @@
   <button class="btn btn-default enter-draft" disabled="disabled">enter draft</button>
   </div>
   </script>
+
+  <script type="template" id="upload-pool">
+  <div class="container">
+  <h1>upload draft pool</h1>
+  <p>in this early build, only one pool is allowed at a time. once a player has uploaded a pool, nobody else can.</p>
+
+  <textarea class="pool-uploader"></textarea>
+  <button class="btn btn-default upload-button">upload pool</button>
+  <button class="btn btn-default start-draft" disabled="disabled">start draft</button>
+  </div>
+  </script>
+
+  <!-- yeah, yeah, i know. i'm moving these. -->
   <script src="scripts/lib/jquery.min.js"></script>
   <script src="scripts/lib/jquery-ui.min.js"></script>
   <script src="scripts/lib/underscore.js"></script>
@@ -28,11 +42,18 @@
   <script src="https://cdn.firebase.com/js/client/2.4.1/firebase.js"></script>
   <script src="https://cdn.firebase.com/libs/backbonefire/0.5.1/backbonefire.min.js"></script>
   <script src="scripts/firebaseRefs.js"></script>
-  <script src="scripts/models.js"></script>
+  <script src="scripts/models/Card.js"></script>
+  <script src="scripts/models/GatekeeperModel.js"></script>
   <script src="scripts/collections.js"></script>
-  <script src="scripts/PoolUploadModel.js"></script>
-  <script src="scripts/helpers.js"></script>
-  <script src="scripts/views.js"></script>
+  <script src="scripts/models/PoolUploadModel.js"></script>
+  <script src="scripts/models/DraftManager.js"></script>
+  <script src="scripts/models/GlimpseDraftManager.js"></script>
+  <script src="scripts/views/RootLayout.js"></script>
+  <script src="scripts/views/DraftCardView.js"></script>
+  <script src="scripts/views/DraftView.js"></script>
+  <script src="scripts/views/UploadPoolView.js"></script>
+  <script src="scripts/views/GatekeeperView.js"></script>
+  <script src="scripts/views/HomeView.js"></script>
   <script src="scripts/card-functions.js"></script>
   <script src="scripts/app.js"></script>
 </body>

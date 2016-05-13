@@ -1,14 +1,3 @@
-var Card = Backbone.Model.extend({
-  defaults:function(){
-    return{
-      name:"none",
-      colors:["none"],
-      types:["none"],
-      image:"none"
-    }
-  }
-});
-
 var GatekeeperModel = Backbone.Firebase.Model.extend({
   //temp link until draft rooms are implemented
   url: "https://tcg-app.firebaseio.com/new-game/current-draft/",
