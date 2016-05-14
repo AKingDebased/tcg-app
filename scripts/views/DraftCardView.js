@@ -5,7 +5,7 @@ var DraftCardView = Backbone.View.extend({
   },
   events:{
     "click":function(){
-      EventHub.trigger("draftCardClick",this);
+      App.vent.trigger("draftCardClick",this);
     }
   },
   render:function(){

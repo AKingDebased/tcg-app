@@ -10,18 +10,6 @@ var clearDraft = function(){
   currentGame.child("packs-initialized").remove();
 }
 
-//debugging
-var dani = function(){
-  $(".email").val("dani.galipeau@gmail.com");
-  $(".password").val("dani");
-}
-
-//debugging
-var me = function(){
-  $(".email").val("akingdebased@gmail.com");
-  $(".password").val("TheSunSails15");
-}
-
 var formatForAJAX = function(card){
   card = card.toLowerCase();
   var regex;
@@ -69,14 +57,4 @@ var sortABC = function(cards){
   })
   cardNames.sort();
   return cardNames;
-};
-
-var setActiveTab = function($tab,$pane,state){
-  if(state === "active"){
-    $tab.addClass(state);
-    $pane.addClass(state);
-  } else {
-    $tab.removeClass("active");
-    $pane.removeClass("active");
-  }
 };

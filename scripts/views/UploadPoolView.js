@@ -19,9 +19,10 @@ var UploadPoolView = Marionette.ItemView.extend({
       this.model.uploadCards(this.ui.poolUploader.val());
     },
     "click .start-draft":function(){
+      //this needs to be bound to a boolean
       App.rootLayout.mainRegion.empty();
       App.draftView = new DraftView({
-        model:new GlimpseDraftManager(),
+        model:new GlimpseDraftManager()
       });
       App.rootLayout.mainRegion.show(App.draftView);
     }

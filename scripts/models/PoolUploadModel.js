@@ -8,7 +8,7 @@ var PoolUploadModel = Backbone.Firebase.Model.extend({
       poolUploaded:false
     };
   },
-  draftPool:new Cards("new-game/current-draft/" + firebase.getAuth().uid + "/draft-pool"),
+  draftPool:new Cards("new-game/current-draft/draft-pool"),
   uploadCards:function(draftPool){
     if(!this.get("poolUploaded")){
       console.log("uploading pool");
@@ -21,11 +21,10 @@ var PoolUploadModel = Backbone.Firebase.Model.extend({
       var uploadCardsPromise = new Promise(function(resolve,reject){
         var self = this;
         var fetchedCards = [];
-
         _.each(cardNames,function(currentCard){
           $.get("https://api.deckbrew.com/mtg/cards/" + formatForAJAX(currentCard),function(fetchedCard){
             fetchedCards.push(fetchedCard);
-
+            
             if(fetchedCards.length === cardNames.length){
               resolve(fetchedCards);
             }
