@@ -25,7 +25,7 @@ var DraftView = Marionette.ItemView.extend({
       if(card.get("name") === "none"){
         return;
       }
-      this.ui.pack.append(self.renderCard(card));
+      self.ui.pack.append(self.renderCard(card));
     });
   }
 });

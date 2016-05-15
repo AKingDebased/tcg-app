@@ -8,7 +8,7 @@ App.addInitializer(function(){
       console.log("authenticated",authData.uid);
     }, {
       //this shit isn't working for some unknown reason
-      remember: "sessionOnly"
+      remember: "none"
     });
   }
 
@@ -24,6 +24,7 @@ App.addInitializer(function(){
 });
 
 App.start();
+
 
 //constant var for card back location
 var CARD_BACK = "../resources/img/mtg-card-back.jpg"

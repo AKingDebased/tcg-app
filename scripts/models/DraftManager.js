@@ -1,17 +1,5 @@
 var DraftManager = Backbone.Firebase.Model.extend({
-  url:"https://tcg-app.firebaseio.com/new-game/current-draft/" + firebase.getAuth().uid,
   draftPool:new Cards("new-game/current-draft/draft-pool"),
-  initializeDraftPool:function(){
-    var self = this;
-    _.each(App.gameManager.cardPool,function(color){
-      color.forEach(function(card){
-        if(card.get("name") === "none"){
-          return;
-        }
-        App.draftPool.push(card.attributes);
-      });
-    });
-  },
   createPack:function(packSize){
     var count = 0;
     var pack = [];

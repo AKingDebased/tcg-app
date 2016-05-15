@@ -21,10 +21,10 @@ var UploadPoolView = Marionette.ItemView.extend({
     "click .start-draft":function(){
       //this needs to be bound to a boolean
       App.rootLayout.mainRegion.empty();
-      App.draftView = new DraftView({
+      App.glimpseDraftView = new GlimpseDraftView({
         model:new GlimpseDraftManager()
       });
-      App.rootLayout.mainRegion.show(App.draftView);
+      App.rootLayout.mainRegion.show(App.glimpseDraftView);
     }
   },
   modelEvents:{

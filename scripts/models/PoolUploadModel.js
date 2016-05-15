@@ -5,10 +5,10 @@ var PoolUploadModel = Backbone.Firebase.Model.extend({
   },
   defaults:function(){
     return{
-      poolUploaded:false
+      poolUploaded:false,
+      draftPool:[]
     };
   },
-  draftPool:new Cards("new-game/current-draft/draft-pool"),
   uploadCards:function(draftPool){
     if(!this.get("poolUploaded")){
       console.log("uploading pool");
@@ -24,7 +24,7 @@ var PoolUploadModel = Backbone.Firebase.Model.extend({
         _.each(cardNames,function(currentCard){
           $.get("https://api.deckbrew.com/mtg/cards/" + formatForAJAX(currentCard),function(fetchedCard){
             fetchedCards.push(fetchedCard);
-            
+
             if(fetchedCards.length === cardNames.length){
               resolve(fetchedCards);
             }
@@ -39,13 +39,15 @@ var PoolUploadModel = Backbone.Firebase.Model.extend({
             return edition.multiverse_id !== 0;
           })
 
-          self.draftPool.create({
+          self.get("draftPool").push({
             name:card.name,
-            colors:card.colors,
+            colors:card.colors || "colorless",
             types:card.types,
             image:validEdition.image_url
           });
         });
+
+        self.save();
 
         self.set("poolUploaded",true);
       });

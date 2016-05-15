@@ -1,13 +1,6 @@
 //utility function for debugging
 var clearDraft = function(){
-  currentGame.child("draft-packs").remove();
-  currentGame.child("done-picking").remove();
-  currentGame.child("drafters").remove();
-  currentGame.child("drafting").remove();
-  currentGame.child("draftPool").remove();
-  currentGame.child("draft-picks").remove();
-  currentGame.child("draft-burns").remove();
-  currentGame.child("packs-initialized").remove();
+  currentGame.child("current-draft").remove();
 }
 
 var formatForAJAX = function(card){

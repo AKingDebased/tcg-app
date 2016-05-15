@@ -2,6 +2,11 @@ var GatekeeperView = Marionette.ItemView.extend({
   attributes:{
     class:"gatekeeper"
   },
+  onShow:function(){
+    //model doesn't sync initially, for some reason
+
+    this.changeNumDrafters(this.model);
+  },
   ui:{
     activeDrafters:".activeDrafters",
     maxDrafters:".maxDrafters",

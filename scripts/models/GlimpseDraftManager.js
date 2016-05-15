@@ -3,6 +3,12 @@ var GlimpseDraftManager = DraftManager.extend({
     console.log("glimpse draft manager online");
     var self = this;
 
+    //weird things happen when the url is not initialized here
+    this.url = "https://tcg-app.firebaseio.com/new-game/current-draft/" + firebase.getAuth().uid;
+    this.draftPicks = new Cards("new-game/current-draft/draft-picks/" + firebase.getAuth().uid);
+    this.draftBurns = new Cards("new-game/current-draft/draft-burns/" + firebase.getAuth().uid);
+
+
     //store all the drafters' packs locally
     //not on node, so there's no server side scripting
     //thus, all clients technically have access to all packs
@@ -22,8 +28,9 @@ var GlimpseDraftManager = DraftManager.extend({
 
     this.firebaseRefs.packsInitialized.on("value",function(snapshot){
       if(!self.get("myPackInitialized")){
-        console.log("my pack is not initialized");
-        if(snapshot.val() === null && self.get("draftNumber") === 0 || snapshot.numChildren() === self.get("draftNumber")){
+        console.log("my pack is not initialized",self.get("draftNumber"));
+        //- 1 the numChildren() due to 0 indexing of draft number
+        if(snapshot.val() === null && self.get("draftNumber") === 0 || snapshot.numChildren() - 1 === self.get("draftNumber")){
           console.log("initializing my pack, id",self.get("draftNumber"));
 
           var packLoaded = new Promise(function(resolve,reject){
@@ -61,8 +68,7 @@ var GlimpseDraftManager = DraftManager.extend({
     packsInitialized:currentGame.child("current-draft/packs-initialized")
   },
   numOfDrafters:2,
-  draftPicks:new Cards("new-game/current-draft/draft-picks/" + firebase.getAuth().uid),
-  draftBurns:new Cards("new-game/current-draft/draft-burns/" + firebase.getAuth().uid),
+
   draftPacks:[],
   setDisconnect:function(){
     //if client disconnects, log their draft info to the server

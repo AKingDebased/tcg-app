@@ -11,10 +11,7 @@ var HomeView = Backbone.View.extend({
     "click .start-draft":function(){
       //empty the region when the modal is fully hidden
       $(".draft-info-modal").modal("hide").on("hidden.bs.modal",function(){
-        App.rootLayout.mainRegion.empty();
-
-        var myStatus = {};
-        myStatus[firebase.getAuth().uid] = true;
+        App.rootLayout.mainRegion.empty();    
 
         App.gatekeeperView = new GatekeeperView({
           model: new GatekeeperModel()
