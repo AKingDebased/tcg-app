@@ -19,7 +19,6 @@ var PoolUploadModel = Backbone.Firebase.Model.extend({
       //promise that fetches cards from deckbrew, then
       //fills the draft pool (unsorted)
       var uploadCardsPromise = new Promise(function(resolve,reject){
-        var self = this;
         var fetchedCards = [];
         _.each(cardNames,function(currentCard){
           $.get("https://api.deckbrew.com/mtg/cards/" + formatForAJAX(currentCard),function(fetchedCard){
@@ -47,8 +46,9 @@ var PoolUploadModel = Backbone.Firebase.Model.extend({
           });
         });
 
+        self.set("poolUploaded",true);  
+        //if man won't upload cards, the devil will do it
         self.save();
-
         self.set("poolUploaded",true);
       });
     } else {

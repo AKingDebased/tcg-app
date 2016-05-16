@@ -12,7 +12,7 @@ var DraftView = Marionette.ItemView.extend({
     pack:".pack"
   },
   renderCard:function(card){
-    var newDraftCardView = new DraftCardView({model:card});
+    var newDraftCardView = new DraftCardView({card:card});
     return newDraftCardView.render().$el;
   },
   renderPack:function(pack){
@@ -21,10 +21,6 @@ var DraftView = Marionette.ItemView.extend({
     this.ui.pack.html("");
 
     pack.each(function(card){
-      //that one default card, fucking it all up again
-      if(card.get("name") === "none"){
-        return;
-      }
       self.ui.pack.append(self.renderCard(card));
     });
   }

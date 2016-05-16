@@ -1,57 +1,7 @@
 var GlimpseDraftManager = DraftManager.extend({
   initialize:function(){
     console.log("glimpse draft manager online");
-    var self = this;
-
-    //weird things happen when the url is not initialized here
-    this.url = "https://tcg-app.firebaseio.com/new-game/current-draft/" + firebase.getAuth().uid;
-    this.draftPicks = new Cards("new-game/current-draft/draft-picks/" + firebase.getAuth().uid);
-    this.draftBurns = new Cards("new-game/current-draft/draft-burns/" + firebase.getAuth().uid);
-
-
-    //store all the drafters' packs locally
-    //not on node, so there's no server side scripting
-    //thus, all clients technically have access to all packs
-    //currently in the draft
-    for(var i = 0; i < this.numOfDrafters; i++){
-      this.draftPacks.push(new Cards("new-game/current-draft/draft-packs/" + i));
-    }
-
-    //assign each player a draft number
-    //should check if the user is present at all
-    for(drafter in App.gatekeeperView.model.get("activeDrafters")){
-      if(drafter === firebase.getAuth().uid){
-        break;
-      }
-      this.increaseDraftNumber();
-    }
-
-    this.firebaseRefs.packsInitialized.on("value",function(snapshot){
-      if(!self.get("myPackInitialized")){
-        console.log("my pack is not initialized",self.get("draftNumber"));
-        //- 1 the numChildren() due to 0 indexing of draft number
-        if(snapshot.val() === null && self.get("draftNumber") === 0 || snapshot.numChildren() - 1 === self.get("draftNumber")){
-          console.log("initializing my pack, id",self.get("draftNumber"));
-
-          var packLoaded = new Promise(function(resolve,reject){
-            _.each(self.createPack(15),function(packCard){
-              self.draftPacks[self.get("draftNumber")].create(packCard);
-              // -1 due to default model in collection
-              // magic number 15 for glimpse draft pack size
-              if(self.draftPacks[self.get("draftNumber")].length - 1 === 15){
-                resolve(self.draftPacks[self.get("draftNumber")]);
-              }
-            });
-          }).then(function(currentPack){
-            self.firebaseRefs.packsInitialized.child(firebase.getAuth().uid).set(true,function(){
-              App.vent.trigger("renderPack",currentPack);
-              self.set("remainingPacks",self.get("remainingPacks") - 1);
-              self.setDisconnect();
-            });
-          });
-        }
-      }
-    });
+  
   },
   defaults:function(){
     return {
@@ -70,16 +20,6 @@ var GlimpseDraftManager = DraftManager.extend({
   numOfDrafters:2,
 
   draftPacks:[],
-  setDisconnect:function(){
-    //if client disconnects, log their draft info to the server
-    //has to be done multiple times because onDisconnect is weird
-    // currentGame.child("current-draft/inactiveDrafters").child(firebase.getAuth().uid).onDisconnect().set({
-    //   draftNumber:self.get("draftNumber"),
-    //   picked:self.picked,
-    //   burns:self.burns,
-    //   remainingPacks:self.remainingPacks
-    // });
-  },
   endDraft:function(){
     //clear the player's mainboard and sideboard
 
@@ -112,6 +52,5 @@ var GlimpseDraftManager = DraftManager.extend({
     } else {
       this.set("draftNumber",newDraftNum)
     }
-    this.setDisconnect();
   }
 });

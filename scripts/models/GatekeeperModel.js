@@ -2,7 +2,7 @@ var GatekeeperModel = Backbone.Firebase.Model.extend({
   //temp link until draft rooms are implemented
   url: "https://tcg-app.firebaseio.com/new-game/current-draft/",
   initialize:function(){
-    this.listenTo(this,"sync",function(){
+    this.listenToOnce(this,"change:activeDrafters",function(event){
       //if the draft has not yet started
       if(!this.get("drafting")){
         console.log("the draft has not yet started");

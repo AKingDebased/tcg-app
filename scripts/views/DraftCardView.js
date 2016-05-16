@@ -10,7 +10,7 @@ var DraftCardView = Backbone.View.extend({
   },
   render:function(){
     //cards don't work when sourced from HTTPS
-    this.$el.attr("src",this.model.get("image").replace('ps:','p:')).addClass("draft-card");
+    this.$el.attr("src",this.card.image.replace('ps:','p:')).addClass("draft-card");
     return this;
   }
 });
