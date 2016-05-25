@@ -82,47 +82,23 @@ img{
 }
 
 /* draft view */
-.completion-container{
-  text-align:center;
-}
-
 .draft{
   text-align:center;
-}
-
-.popover{
-  max-width:400px !important;
-  text-align:center;
-}
-
-.popover img{
-  height:415px;
-}
-
-.restart-draft{
-  display:block;
-  margin:15px auto;
 }
 
 .draft-card{
   height:245px;
 }
 
-.inner-draft-container{
-  width:900px;
-  margin:0 auto;
-  text-align:center;
-}
-
-.draft-options{
-  text-align:center;
-  margin:15px 0px;
-}
-
 .picks, .burns{
   width:900px;
   margin:0 auto;
   text-align:center;
+}
+
+.selected{
+  border:6px groove lightgreen;
+  border-radius:15px;
 }
 
 /* card pool view */

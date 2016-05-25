@@ -13,14 +13,16 @@ var App = App || new Marionette.Application({});
       burnsRegion:".burns-region"
     },
     onRender:function(){
-      var packView = new App.PackView();
-      // var picksView = new App.PicksView();
-      // var burnsView = new App.BurnsView();
+      var packView = new App.PackView({
+        parentLayout:this
+      });
+      var picksView = new App.PicksView();
+      var burnsView = new App.BurnsView();
 
 
       this.packRegion.show(packView);
-      // this.picksRegion.show(picksView);
-      // this.burnsRegion.show(burnsView);
+      this.picksRegion.show(picksView);
+      this.burnsRegion.show(burnsView);
     }
   });
 })();

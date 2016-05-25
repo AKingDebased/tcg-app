@@ -16,6 +16,26 @@ var App = App || new Marionette.Application({});
         self.collection = self.collection || pack;
         self.render();
       });
+    },
+    childEvents:{
+      "cardClicked":function(childView){
+        //if the pick has not already been made
+        if(!this.options.parentLayout.model.get("picked")){
+          if(!childView.model.get("selected")){
+            childView.model.set("selected",true);
+            this.options.parentLayout.model.set("picked",true);
+          }
+        } else {
+          //if you click on another card while one is selected
+          if(!childView.model.get("selected")){
+            this.collection.find(function(card){
+              return (card.get("name") !== childView.model.get("name"))  && card.get("selected");
+            }).set("selected",false);
+
+            childView.model.set("selected",true);
+          }
+        }
+      }
     }
   });
 })();
