@@ -4,7 +4,8 @@ var Card = Backbone.Model.extend({
       name:"none",
       colors:["none"],
       types:["none"],
-      image:"none"
+      image:"none",
+      selected:false
     }
   }
 });

@@ -1,31 +1,35 @@
-var App = new Marionette.Application({});
+var App = App || new Marionette.Application({});
 
-App.addInitializer(function(){
-  console.log("app started");
+(function(){
+  "use strict";
 
-  if(!firebase.getAuth()){
-    firebase.authAnonymously(function(error, authData) {
-      console.log("authenticated",authData.uid);
-    }, {
-      //this shit isn't working for some unknown reason
-      remember: "none"
+  App.on("before:start",function(){
+    console.log("app started");
+
+    App.rootLayout = new App.RootLayout();
+    App.homeView = new App.HomeView();
+
+    App.rootLayout.render().mainRegion.show(App.homeView);
+
+    firebase.auth().signInAnonymously().catch(function(error) {
+      var errorCode = error.code;
+      var errorMessage = error.message;
+
+      console.log("error logging in",errorMessage,errorCode);
     });
-  }
 
-  firebase.onAuth(function(authData){
-    if(authData){
-      console.log("authenticated",authData.uid);
-      App.rootLayout = new RootLayout();
-      App.homeView = new HomeView();
+    auth.onAuthStateChanged(function(user) {
+      if (user) {
+        if(!uid){
+          uid = user.uid;
+          console.log("authenticated",uid);
+        }
+      } else {
+        console.log("gonna miss you.");
+      }
+    });
 
-      App.rootLayout.render().mainRegion.show(App.homeView);
-    }
   });
-});
 
-App.start();
-
-
-//constant var for card back location
-var CARD_BACK = "../resources/img/mtg-card-back.jpg"
-var LENGTH_OFFSET = 1;
+  App.start();
+})()

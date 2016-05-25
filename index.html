@@ -4,15 +4,32 @@
   <meta charset="utf-8">
   <title></title>
   <link rel="stylesheet" href="css/sandstone-bootstrap.css">
-  <link rel="stylesheet" href="css/animate.css">
   <link rel="stylesheet" href="css/styles.css">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 <body>
 
+  <!-- templates (temporary)-->
+  <script type="template" id="home-template">
+  <div class="container">
+  <h1>mtg drafter</h1>
+  <h2>choose your format</h2>
 
-  <!-- asynchronous template loading using $.get is causing
-  rendering issues. for now, resorting to script tag templates -->
+  <div class="draft-choice">
+  <button class="btn btn-default start-glimpse">glimpse draft</button>
+  <button class="btn btn-default start-grid">grid draft</button>
+  <button class="btn btn-default start-winston">winston draft</button>
+  <button class="btn btn-default start-winchester">winchester draft</button>
+  </div>
+  </div>
+  <div class="modal fade draft-info-modal">
+  <div class="modal-dialog modal-sm">
+  <div class="modal-content draft-info">
+  </div>
+  </div>
+  </div>
+  </script>
+
   <script type="template" id="gatekeeper-template">
   <div class="container">
   <h1 class="waiting-label">waiting for drafters...</h1>
@@ -21,7 +38,7 @@
   </div>
   </script>
 
-  <script type="template" id="upload-pool">
+  <script type="template" id="pool-upload-template">
   <div class="container">
   <h1>upload draft pool</h1>
   <p>in this early build, only one pool is allowed at a time. once a player has uploaded a pool, nobody else can.</p>
@@ -33,40 +50,54 @@
   </script>
 
   <script type="template" id="glimpse-draft">
-    <div class="container">
-      <h1>pack</h1>
-      <div class="pack"></div>
-      <h2>picks</h2>
-      <div class="picks"></div>
-      <h2>burns</h2>
-      <div class="burns"></div>
-    </div>
+  <div class="container draft">
+  <h1>pack</h1>
+  <div class="pack-region"></div>
+  <h2>picks</h2>
+  <div class="picks-region"></div>
+  <h2>burns</h2>
+  <div class="burns-region"></div>
+  </div>
   </script>
 
-  <!-- yeah, yeah, i know. i'm moving these. -->
-  <script src="scripts/lib/jquery.min.js"></script>
-  <script src="scripts/lib/jquery-ui.min.js"></script>
-  <script src="scripts/lib/underscore.js"></script>
-  <script src="scripts/lib/bootstrap.min.js"></script>
-  <script src="scripts/lib/backbone.js"></script>
-  <script src="scripts/lib/marionette.min.js"></script>
-  <script src="https://cdn.firebase.com/js/client/2.4.1/firebase.js"></script>
+  <!-- libraries -->
+  <script src="https://code.jquery.com/jquery-2.2.3.min.js" integrity="sha256-a23g1Nt4dtEYOj7bR+vTu7+T8VP13humZFBJNIYoEJo=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/backbone.js/1.3.3/backbone-min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/backbone.marionette/2.4.5/backbone.marionette.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/backbone.radio/1.0.4/backbone.radio.min.js"></script>
+  <!-- deprecated firebase version, for backbonefire compatability -->
+  <script src="https://cdn.firebase.com/js/client/2.4.2/firebase.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/3.0.0/firebase.js"></script>
   <script src="https://cdn.firebase.com/libs/backbonefire/0.5.1/backbonefire.min.js"></script>
-  <script src="scripts/firebaseRefs.js"></script>
+
+  <!--firebase-->
+  <script>
+  // Initialize Firebase
+  var config = {
+    apiKey: "AIzaSyCJ_iKym7CeY_EN5JFqiUhz3Tz5-l8JUXA",
+    authDomain: "tcg-app.firebaseapp.com",
+    databaseURL: "https://tcg-app.firebaseio.com",
+    storageBucket: "tcg-app.appspot.com",
+  };
+  firebase.initializeApp(config);
+  </script>
+
+  <!-- app files -->
+  <script src="scripts/utility.js"></script>
   <script src="scripts/models/Card.js"></script>
   <script src="scripts/models/GatekeeperModel.js"></script>
-  <script src="scripts/collections.js"></script>
+  <script src="scripts/collections/Cards.js"></script>
+  <script src="scripts/views/DraftCardView.js"></script>
+  <script src="scripts/views/PackView.js"></script>
+  <script src="scripts/views/GlimpseDraftLayout.js"></script>
   <script src="scripts/models/PoolUploadModel.js"></script>
-  <script src="scripts/models/DraftManager.js"></script>
   <script src="scripts/models/GlimpseDraftManager.js"></script>
   <script src="scripts/views/RootLayout.js"></script>
-  <script src="scripts/views/DraftCardView.js"></script>
-  <script src="scripts/views/DraftView.js"></script>
-  <script src="scripts/views/GlimpseDraftView.js"></script>
-  <script src="scripts/views/UploadPoolView.js"></script>
+  <script src="scripts/views/PoolUploadView.js"></script>
   <script src="scripts/views/GatekeeperView.js"></script>
   <script src="scripts/views/HomeView.js"></script>
-  <script src="scripts/card-functions.js"></script>
   <script src="scripts/app.js"></script>
 </body>
 </html>

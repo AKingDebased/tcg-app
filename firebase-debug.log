@@ -1,0 +1,15 @@
+[debug] ----------------------------------------------------------------------
+[debug] Command:      node /usr/local/bin/firebase serve
+[debug] CLI Version:  3.0.0
+[debug] Platform:     darwin
+[debug] Node Version: v0.12.5
+[debug] Time:         Tue May 24 2016 21:51:54 GMT-0700 (PDT)
+[debug] ----------------------------------------------------------------------
+[debug] 
+[warn] ⚠  "firebase" key in firebase.json is deprecated. Run firebase use --add instead
+[warn] ⚠  Deprecation Warning: Firebase Hosting configuration should be moved under "hosting" key.
+[info] Starting Firebase development server...
+[info] 
+[info] Project Directory: /Users/gabriel/Desktop/tcg-app
+[info] 
+[info] Server listening at: http://localhost:5000
